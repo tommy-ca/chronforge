@@ -29,7 +29,7 @@
   "coverage": {
     "76_l2_l3_kernel": {
       "lever": "full pinned Rust --lib suite",
-      "evidence_class": "Runtime-subset when CI lever executes",
+      "evidence_class": "Runtime-subset",
       "coverage_limit": "individual L2/L3 test names are not elevated to separate acceptance unless the pinned suite exposes stable addressable fixtures"
     },
     "77_queue_latency_fee": {
@@ -55,10 +55,11 @@
   "verification": {
     "lever": "bash tools/verify/d0_goldens.sh",
     "receipt_validator": "python3 tools/verify/verify_d0_golden_receipt.py",
-    "workflow_run": null,
-    "workflow_head_sha": null,
-    "status": "PENDING_CI",
-    "evidence_class": "Runtime-subset only after successful external lever execution; Metadata/Static otherwise"
+    "workflow_run": 34902006353,
+    "workflow_head_sha": "15e7f9c8fb28477ff6af42b5dae5c5126fcece91",
+    "status": "PASS",
+    "evidence_class": "Runtime-subset + Metadata",
+    "external_golden_step": "SUCCESS"
   },
   "limitations": [
     "Default live/iceoryx feature set is not exercised.",
