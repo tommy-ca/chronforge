@@ -38,6 +38,8 @@ case "$PROFILE" in
       cargo check --workspace
     run_required control-plane control-plane-guard Static/Metadata/CI \
       python3 "$ROOT/tools/verify/control_plane_guard.py"
+    run_required control-plane issue-orchestration-matrix Static/Metadata/CI \
+      python3 "$ROOT/tools/verify/validate_issue_orchestration.py"
     printf '%s\n' '{"schema":"chronforge.verification.profile-run/v1","profile":"control-plane","verdict":"PASS","evidence_class":"Static/Metadata/CI"}'
     ;;
   d0)

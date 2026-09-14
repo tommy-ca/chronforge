@@ -1,214 +1,234 @@
 # ChronForge execution graph
 
-This is the canonical development graph tying OpenSpec intent, qstack quant-development composition, pstack execution mechanics, ChronForge issues/PRs, and qorch research handoff together.
+This is the canonical development graph tying OpenSpec intent, qstack quant-development composition, pstack execution mechanics, ChronForge issues/PRs, project verification levers, and qorch research handoff together.
 
-## Control flow
+Machine orchestration index: [`ISSUE-ORCHESTRATION.json`](ISSUE-ORCHESTRATION.json). The index includes one record for program #1, phase coordinators #3-#5, optional capabilities #6-#8, and runtime leaves/joins #11-#29.
+
+## Layered ownership
 
 ```text
-USER / PROJECT INTENT
+OpenSpec
+  durable intent: proposal -> specs -> design -> ADR review -> tasks
         |
         v
-OpenSpec active change
-proposal -> specs -> design -> ADR -> tasks
-        |
-        | intent/spec merge to main
-        v
-qstack ChronForge ProjectProfile
-+ QD CapabilityProfile
-+ VerificationProfile
+qstack-mode / development
+  QuantDomainOverlay
+  + QD CapabilityProfile
+  + operation skills
+  + VerificationProfile
+  + ChronForge ProjectProfile
         |
         v
-upstream pstack BasePlaybook / orch mechanics
+pstack /poteto-mode + pstack orch
+  generic planning / dependency state / workers / worktrees / PRs / review / shipping
+        |
+        +--> swarm       independent coverage/fan-out
+        +--> arena       competing candidate bakeoff + synthesis
+        `--> interrogate readonly adversarial review
         |
         v
-ChronForge leaf issue(s) / PR(s)
+ChronForge issue / branch / PR
         |
         v
-phase join gate + evidence receipt
-        |
-        | implementation merge
-        v
-OpenSpec strict verify + archive
+verify-chronforge project lever(s)
         |
         v
-living spec + SoftwareArtifactRef / RunReceipt / DeterminismReceipt
+EvidenceReceipt -> parent join
         |
-        +---------------------------> qorch ResearchProgram when research is requested
+        v
+implementation merge -> OpenSpec strict verify/archive -> living spec
+        |
+        `--> immutable SoftwareArtifactRef / RunReceipt / DeterminismReceipt -> qorch research when requested
 ```
 
-## Harness bootstrap H0
+Qstack is the project-facing quant-development composition layer; it does not clone pstack's generic engineering workflow. Pstack owns generic software-development mechanics. ChronForge owns implementation state and executable evidence. Qorch owns quant-research orchestration only after immutable artifact handoff.
+
+Upstream `/orchestrate` remains an explicitly invoked Cursor workflow; ChronForge does not make it a build/runtime dependency. The issue graph and pstack orch state are sufficient durable project control.
+
+## Recursive issue state machine
+
+Every issue record follows this state machine:
 
 ```text
-#33 H0 intent-driven development harness
-  |
-  +-> #34 H0.1 intent/spec boundary ---------------- COMPLETE
-  |     PR #37 -> 07a0eb52b6af5b440a9816e42b984576e87a3610
-  |
-  +-> #35 H0.2 repo-local harness ------------------ ACTIVE
-  |     AGENTS / OpenSpec config / docs / CI
-  |
-  +-> #36 H0.3 strict verify + archive ------------- BLOCKED on H0.2
-  |
-  `-> H0 closes only after living-spec read-back
+BLOCKED
+  | declared dependencies accepted
+  v
+INTENT_READY
+  | governing OpenSpec intent/tasks accepted on main
+  v
+READY
+  | qstack composition + pstack base playbook resolved
+  v
+ACTIVE
+  | isolated issue/worker execution
+  v
+SYNTHESIS          only when arena trigger fires
+  v
+REVIEW             interrogate when required
+  | unresolved Act on -> ACTIVE
+  v
+VERIFY
+  | ISSUES  -> ACTIVE
+  | BLOCKED -> BLOCKED
+  ` PASS    -> HANDOFF
+               |
+               v
+              DONE
 ```
 
-H0 configures development control-plane behaviour only. It does not establish Runtime/PAPER/LIVE evidence for the trading engine.
+For a join node, READY also requires every declared child handoff receipt. DONE requires independent cross-child verification. Closing child issues or merging their PRs is not sufficient evidence.
 
-## Runtime program — actual current state
+## Per-issue execution protocol
 
-PR #32 landed substantial D0 characterization and archived the D0 OpenSpec change, but the recursive child/join graph predates that PR and was not reconciled. The parent #2 auto-closed while #11-#14 remain open. Therefore **D1 is not yet graph-ready**.
+Every machine record declares the same eight concerns:
+
+1. **Intent gate** — OpenSpec change and task binding.
+2. **Qstack composition** — `development` intent, exact QD profiles, operation skills, VerificationProfile and ChronForge ProjectProfile.
+3. **Pstack execution** — BasePlaybook and pstack orch role; generic workflow bodies are upstream-owned.
+4. **Swarm** — `none | partition | race | mixed`, independent slices and done predicate.
+5. **Arena** — `skip | conditional | required | required-if-selected`, trigger and synthesis policy.
+6. **Interrogate** — whether readonly adversarial review is required, its scope, and the `Act on` merge gate.
+7. **Lever verification** — exact project command(s), evidence class and smallest falsifier.
+8. **Handoff** — typed evidence receipt and the node that consumes it.
+
+### Swarm rule
+
+Use swarm for independent coverage or an explicit race. Each slice receives a standalone brief, isolated writable state and a done predicate, then returns `PASS | ISSUES | BLOCKED` with evidence. Siblings do not coordinate through shared mutable files.
+
+### Arena rule
+
+Arena is conditional, not ceremonial. Use it when two or more plausible public API/data-model/adapter/runtime-loop shapes have meaningful lock-in cost. Candidates use the same contract/rubric, are cross-judged, one base is selected, useful ideas are grafted deliberately, and the synthesized artifact is verified. Proof/inventory tasks usually skip arena.
+
+Planned arena-heavy nodes:
+
+- #17 execution command/report/order-state design;
+- #20 hftbacktest adapter boundary;
+- #25 `RuntimeEventSource` ownership/lifetime API;
+- #26 `Strategy` / `StrategyContext` public API;
+- optional #6-#8 when selected and competing shapes remain.
+
+### Interrogate rule
+
+Interrogate is mandatory for every join and for leaves changing public contracts, deterministic ordering, state authority, command/fact semantics, callback ownership, recovery policy or dependency boundaries. It is readonly. Findings are classified `Act on | Consider | Noted | Dismissed`; unresolved `Act on` findings block merge. Interrogate never auto-applies changes.
+
+### Lever rule
+
+A completion claim needs the smallest rerunnable ChronForge-owned command capable of falsifying it. Narrative review, OpenSpec validation or compilation cannot substitute for Runtime/PAPER/LIVE evidence. Missing executable proof means `BLOCKED`.
+
+Current project verifier:
+
+```bash
+bash tools/verify/doctor.sh
+bash tools/verify/verify.sh control-plane
+bash tools/verify/verify.sh d0
+bash tools/verify/verify.sh d1   # currently BLOCKED
+bash tools/verify/verify.sh d2   # currently BLOCKED
+bash tools/verify/verify.sh d3   # currently BLOCKED
+```
+
+`d4`-`d6` also remain BLOCKED until optional capability selection plus implementation.
+
+## Runtime program
 
 ```text
-#1 ChronForge runtime implementation program
+#1 ChronForge runtime program
   |
   +-> O0 qstack binding -------------------------------- COMPLETE
-  |     #10 / PR #31 / e74dd7ea0dec315b84331fbc0bb941f3a2f9390f
   |
-  +-> D0 characterization apply ------------------------ LANDED, JOIN PENDING
-  |     #2 parent auto-closed by PR #32
-  |     PR #32 / 500e58899ed16d3c2c866c580a8f80e38276373b
-  |     archived OpenSpec: 2026-09-14-chronforge-d0-baseline
-  |     |
-  |     +-> #11 pin/dependency/provenance -------------- OPEN
-  |     +-> #12 seam inventory ------------------------- OPEN
-  |     +-> #13 executable baseline/goldens ------------ OPEN
-  |     `-> #14 D0.J join ------------------------------ OPEN / REQUIRED
+  +-> D0 reconciliation -------------------------------- CURRENT FRONTIER
+  |     #11 pin/provenance ------------------------------ READY
+  |     #12 seam inventory ------------------------------ after #11 final pin
+  |     #13 executable goldens -------------------------- after #11 final pin
+  |     `-> #14 D0.J ------------------------------------ BLOCKED on child receipts
   |             |
-  |             `-> accepted D0 join receipt unlocks D1
+  |             `-> D0BaselineReceipt unlocks D1 intent/apply
   |
-  +-> D1 deterministic engine contracts ---------------- BLOCKED on #14
-  |     #3
-  |       #15 IDs / units / model identities -----------+
-  |       #16 EventPhase / EventKey --------------------+--> #19 D1.J
-  |       #17 commands / reports / OrderState ----------+
-  |       #18 account / result / receipts --------------+
-  |                                                      |
-  |                       accepted D1 join receipt ------+
-  |                                      |
-  +--------------------------------------v
-  +-> D2 hftbacktest integration adapters -------------- BLOCKED
-  |     #4
-  |       #20 dependency + market normalization --------+
-  |       #21 command -> kernel processors -------------+--> #24 D2.J
-  |       #22 outcomes -> canonical facts --------------+
-  |       #23 100-run determinism ----------------------+
-  |                                      |
-  +--------------------------------------v
-  +-> D3 deterministic native strategy runtime --------- BLOCKED
-  |     #5
-  |       #25 RuntimeEvent / RuntimeEventSource --------+
-  |       #26 Strategy / StrategyContext ---------------+--> #29 D3.J
-  |       #27 runtime loop / callback serialization ----+
-  |       #28 artifact / qorch handoff -----------------+
-  |                                      |
-  |                                      +--> mandatory MVP complete
+  +-> D1 engine contracts ------------------------------ BLOCKED
+  |     OpenSpec: chronforge-d1-engine-contracts
+  |     #15 IDs/units/model identities -----------------+
+  |     #16 EventPhase/EventKey ------------------------+
+  |     #17 commands/reports/OrderState ----------------+--> #19 D1.J
+  |     #18 account/result/receipts --------------------+
+  |                                                     |
+  |                               D1EngineContractReceipt
+  +-----------------------------------------------------v
+  +-> D2 hftbacktest integration ----------------------- BLOCKED
+  |     OpenSpec: chronforge-d2-hftbacktest-integration
+  |     #20 dependency/market normalization ------------+
+  |     #21 command -> kernel processors ---------------+
+  |     #22 outcomes -> canonical facts ----------------+--> #24 D2.J
+  |     #23 100-run determinism ------------------------+
+  |                                                     |
+  |                                  D2IntegrationReceipt
+  +-----------------------------------------------------v
+  +-> D3 native strategy runtime ----------------------- BLOCKED
+  |     OpenSpec: chronforge-d3-native-runtime
+  |     #25 RuntimeEvent/Source ------------------------+
+  |     #26 Strategy/Context ---------------------------+
+  |     #27 runtime loop/callback serialization --------+--> #29 D3.J
+  |     #28 artifact/qorch handoff ---------------------+
+  |                                                     |
+  |                                           D3MvpReceipt
+  |                                                     |
+  |                                      mandatory MVP complete
   |
-  +-> D4 FFI/Python host ------------------------------- OPTIONAL / explicit selection
-  |     #6
-  |
-  +-> D5 bounded live core ----------------------------- OPTIONAL / explicit selection
-  |     #7
-  |       |
-  |       `-> D6 OMS/EMS/EventLedger/recovery ---------- OPTIONAL / capability selected
-  |             #8
-  |
-  `-> verified artifact handoff -> qorch research
+  +-> #6 D4 FFI host ----------------------------------- OPTIONAL / selected only
+  +-> #7 D5 live core ---------------------------------- OPTIONAL / selected only
+  `-> #8 D6 governance/recovery ------------------------ OPTIONAL / selected capability only
 ```
 
-## Current runtime frontier
+Mandatory MVP remains `O0 -> D0 -> D1 -> D2 -> D3`.
 
-After H0 harness setup, finish the D0 recursive contract before starting D1 implementation:
+## D0 reconciliation plan
+
+D0 material characterization already landed in PR #32 and its OpenSpec change was archived. H2 does not invent a second D0 intent cycle. Instead:
 
 ```text
-#11 complete pin/dependency/provenance receipt -------+
-#12 complete machine-readable seam inventory ---------+--> #14 D0.J
-#13 complete baseline-test/golden artifact -----------+
-                                                       |
-                                                       v
-                                               D1 becomes READY
+#11 swarm provenance/pins ---------------------------+
+#12 swarm source seams ------------------------------+--> #14 interrogate + D0 join lever
+#13 swarm golden families ---------------------------+
 ```
 
-PR #32 already provides strong input evidence for all three leaves. Reuse that evidence; do not redo the characterization from scratch. Close each leaf only when its own acceptance criteria are explicitly satisfied, then accept #14 as the single phase gate.
+#11 and read-only parts of #12 may run in parallel; #12 final pin references and #13 execution use #11. Reuse PR #32 evidence and only add missing issue-specific receipts/levers. #14 consumes those receipts and independently checks ownership, pin, baseline and evidence-class consistency.
 
-## Intent rule for every D-phase
+## D1-D3 intent gates
 
-D0 historical work already used OpenSpec. D1 onward MUST bind material implementation to an OpenSpec change before normal apply.
-
-Recommended granularity:
-
-| Work shape | OpenSpec granularity |
-|---|---|
-| one coherent phase with tightly coupled leaves | one phase change, leaf tasks map to issues |
-| independent capability that can ship/revert alone | separate change |
-| read-only investigation | no product change until implementation is selected |
-| emergency mitigation | explicit exception + retrospective reconciliation |
-
-Do not create one OpenSpec change per trivial line-level task. OpenSpec captures durable intent/behaviour; issues capture execution state.
-
-## D1 intent graph — prepared but blocked
-
-Once #14 is accepted, create/land a D1 change such as:
+After each predecessor join is accepted, the next phase first lands one coherent OpenSpec change before leaf apply:
 
 ```text
-OpenSpec: chronforge-d1-engine-contracts
-  proposal
-  specs:
-    deterministic-ordering
-    execution-domain
-    account-result-receipts
-  design
-  ADR review
-  tasks
-    -> #15
-    -> #16
-    -> #17
-    -> #18
-    -> #19 join verification
+#14 PASS
+ -> OpenSpec chronforge-d1-engine-contracts intent/spec/design/tasks
+ -> #15/#16/#17/#18 workers
+ -> #19 interrogate + cross-child formal/property lever
+
+#19 PASS
+ -> OpenSpec chronforge-d2-hftbacktest-integration
+ -> #20/#21/#22/#23 workers
+ -> #24 interrogate + integrated Runtime lever
+
+#24 PASS
+ -> OpenSpec chronforge-d3-native-runtime
+ -> #25/#26/#27/#28 workers
+ -> #29 interrogate + integrated 100-run Runtime lever
 ```
 
-Qstack composition:
-
-```text
-QD-06 backtest-engine
-+ formal-state-model
-+ replay-parity
-+ deterministic-runtime-audit
-```
-
-Pstack execution:
-
-```text
-/poteto-mode
-  -> feature / multi-phase-plan / orchestrate as appropriate
-  -> leaf worktrees/PRs
-  -> review/verification
-  -> join acceptance
-```
+Phase-level OpenSpec changes map leaf tasks to GitHub issues; do not create one change per trivial implementation edit.
 
 ## Evidence gates
 
 ```text
-Intent/spec gate
-  accepted OpenSpec artifacts on main
-
-Leaf gate
-  issue-specific tests/evidence
-
-Join gate
-  cross-leaf invariants + receipt
-
-Merge gate
-  implementation PR/stack verified
-
-Archive gate
-  strict OpenSpec validation after implementation merge
-
-Research gate
-  immutable SoftwareArtifactRef / RunReceipt / DeterminismReceipt available
+Intent gate   = accepted OpenSpec artifacts on main
+Leaf gate     = issue-specific lever + handoff receipt
+Arena gate    = synthesized candidate verified when trigger fired
+Review gate   = interrogate required findings triaged; Act on resolved
+Join gate     = all child receipts + independent cross-child lever
+Merge gate    = project CI / verify-chronforge green at earned evidence class
+Archive gate  = implementation merged, strict OpenSpec validation, living spec read-back
+Research gate = immutable software/runtime artifact reference available
 ```
 
-Evidence classes remain distinct: Static, Metadata, formal/property, Runtime, PAPER, LIVE.
+Evidence classes stay distinct: `Static`, `Metadata`, `formal/property`, `Runtime`, `PAPER`, `LIVE`.
 
 ## Project-state rule
 
-Only ChronForge owns implementation issue/PR state. OpenSpec tasks and qstack/pstack orchestration reference that state; they do not duplicate it. Qorch does not receive development branches, worktrees, PR status, or worker assignment.
+Only ChronForge owns implementation issue/PR state. Pstack orch may track generic work-unit dependencies, but OpenSpec/qstack/pstack metadata does not become runtime state. Qorch does not mirror worktrees, branches, PR status or developer-agent assignments.
