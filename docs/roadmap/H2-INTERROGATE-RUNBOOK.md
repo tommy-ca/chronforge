@@ -4,15 +4,24 @@ This runbook closes the remaining H2.3 review gate for recursive issue orchestra
 
 ## Scope
 
-Review the H2 implementation that landed through PR #52.
+Review the **entire merged H2 implementation**, not only the original PR #52 slice.
 
 ```text
-base intent merge: c1f486379d97054046a0d0c9290cfa88bf522e0c
-implementation merge: 8392e5f1e267860301e365c8157aff66c5c04b9c
-review scope: c1f486379d97054046a0d0c9290cfa88bf522e0c..8392e5f1e267860301e365c8157aff66c5c04b9c
+scope base: c1f486379d97054046a0d0c9290cfa88bf522e0c
+scope head: the final merged H2 implementation/reconciliation commit recorded by #54 and #50
 ```
 
-The intent is to verify that ChronForge's recursive issue-orchestration control plane correctly composes OpenSpec intent, qstack quant-development profiles, pstack engineering mechanics, purposeful swarm/arena/interrogate usage, project-owned verification levers, and typed child/join evidence without introducing runtime dependencies or false Runtime/PAPER/LIVE claims.
+The required head MUST include:
+
+- PR #52 base recursive matrix/graph implementation (`8392e5f1e267860301e365c8157aff66c5c04b9c`);
+- PR #53 multi-model resumption/runbook (`945c13a895122b0b35f1c1fcff961efffe1836b3`);
+- PR #55 accepted H2.4 staged-dependency/issue-packet intent (`8c05d1e29c9c4284985ab43a131204f6bcab6962`);
+- PR #56 schema-v2 matrix/validator/renderer implementation (`9d1169b96f1b7fbdeca54a5b93ca73f988ab8714`);
+- the final H2.4 issue-synchronization reconciliation merge that records `docs/roadmap/ISSUE-SYNC-RECEIPT.json`.
+
+Resolve the exact final head from issue #54/#50 immediately before running interrogate and record it in the receipt. Reviewing only `c1f4863..8392e5f` is no longer sufficient.
+
+The intent is to verify that ChronForge's recursive issue-orchestration control plane correctly composes OpenSpec intent, qstack quant-development profiles, pstack engineering mechanics, purposeful swarm/arena/interrogate usage, project-owned verification levers, staged start-vs-verify dependencies, self-contained issue execution packets, and typed child/join evidence without introducing runtime dependencies or false Runtime/PAPER/LIVE claims.
 
 ## Required harness
 
@@ -44,18 +53,17 @@ The run is valid when at least two independent reviewer model families execute s
 
 ## Invocation
 
-From a checkout containing the merged H2 implementation:
+From a checkout containing the final merged H2 implementation:
 
 ```text
 /interrogate review the H2 recursive orchestration changes between
-c1f486379d97054046a0d0c9290cfa88bf522e0c and
-8392e5f1e267860301e365c8157aff66c5c04b9c.
+c1f486379d97054046a0d0c9290cfa88bf522e0c and <FINAL_H2_IMPLEMENTATION_HEAD>.
 
-Intent: verify ownership boundaries, issue graph correctness, OpenSpec intent gates,
+Intent: verify ownership boundaries, staged issue graph correctness, OpenSpec intent gates,
 qstack/pstack separation, swarm/arena/interrogate semantics, lever falsifiability,
-join evidence requirements, control-plane/runtime dependency isolation, and evidence honesty.
-Do not modify files. Treat missing Runtime/PAPER/LIVE evidence as a correctness issue only
-if the implementation claims that evidence exists.
+issue-packet/matrix consistency, join evidence requirements, control-plane/runtime dependency
+isolation, and evidence honesty. Do not modify files. Treat missing Runtime/PAPER/LIVE evidence
+as a correctness issue only if the implementation claims that evidence exists.
 ```
 
 Interrogate is readonly. Reviewer findings MUST NOT be auto-applied.
@@ -80,7 +88,7 @@ Post the synthesized verdict to ChronForge issue #50 and record this compact rec
 ```yaml
 InterrogateReceipt:
   scope_base: c1f486379d97054046a0d0c9290cfa88bf522e0c
-  scope_head: 8392e5f1e267860301e365c8157aff66c5c04b9c
+  scope_head: <FINAL_H2_IMPLEMENTATION_HEAD>
   pstack_revision: be432a96ed36e48d05f44bf375864355f62263f9
   reviewers:
     - label: Reviewer A
@@ -122,4 +130,4 @@ After posting a valid PASS receipt:
 4. merge archive PR;
 5. read back the living `chronforge-recursive-issue-orchestration` capability from `main`;
 6. close #50 and then #47;
-7. resume the runtime frontier at #11/#12/#13 -> #14.
+7. resume the runtime frontier at #11 plus read-only #12; #13 after #11; all three -> #14.
