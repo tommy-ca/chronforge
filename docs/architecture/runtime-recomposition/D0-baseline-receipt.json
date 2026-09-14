@@ -3,94 +3,40 @@
   "issue": 14,
   "phase_issue": 2,
   "implementation_issue": 90,
-  "candidate_base_revision": "8fb4872e8dcb5b743489cb826037e2b01638bcf1",
+  "chronforge_source": {
+    "candidate_base_revision": "8fb4872e8dcb5b743489cb826037e2b01638bcf1",
+    "interrogate_reviewed_revision": "994a9c2881a37ec30e987fa9e95540acc9681b13",
+    "accepted_proof_revision": null
+  },
   "evidence_class": "Composite: Runtime-subset + Static/Metadata",
   "live_pass": false,
   "paper_pass": false,
   "pins": {
-    "hftbacktest": {
-      "revision": "058cfefd9740b6857bb875bad4d5e6547a88379a",
-      "role": "external-microstructure-kernel",
-      "upstream": "nkaz001/hftbacktest"
-    },
-    "titan": {
-      "revision": "3c56818f6e412f21bc8b305ff3dc0f6dc1aa7024",
-      "role": "reference-evidence-only",
-      "runtime_dependency": false
-    },
-    "qstack_runtime_recomposition": {
-      "revision": "6d124b93b6008851c1fc48aaef5ef6a20d6535b6",
-      "role": "development-domain-semantics",
-      "runtime_dependency": false
-    },
-    "qstack_chronforge_profile": {
-      "revision": "cf4e62f4ef98fe378393fa3adff8449ff9457024",
-      "role": "development-project-profile",
-      "runtime_dependency": false
-    },
-    "pstack": {
-      "revision": "be432a96ed36e48d05f44bf375864355f62263f9",
-      "role": "generic-development-orchestration-substrate",
-      "subtree": "pstack/",
-      "runtime_dependency": false
-    }
+    "hftbacktest": {"revision":"058cfefd9740b6857bb875bad4d5e6547a88379a","role":"external-microstructure-kernel","upstream":"nkaz001/hftbacktest"},
+    "titan": {"revision":"3c56818f6e412f21bc8b305ff3dc0f6dc1aa7024","role":"reference-evidence-only","runtime_dependency":false},
+    "qstack_runtime_recomposition": {"revision":"6d124b93b6008851c1fc48aaef5ef6a20d6535b6","role":"development-domain-semantics","runtime_dependency":false},
+    "qstack_chronforge_profile": {"revision":"cf4e62f4ef98fe378393fa3adff8449ff9457024","role":"development-project-profile","runtime_dependency":false},
+    "pstack": {"revision":"be432a96ed36e48d05f44bf375864355f62263f9","role":"generic-development-orchestration-substrate","subtree":"pstack/","runtime_dependency":false}
   },
   "children": {
-    "pin": {
-      "issue": 11,
-      "path": "docs/architecture/runtime-recomposition/D0-pin-receipt.json",
-      "git_blob_sha": "e6c54a4b34fd0aad6e86d750dd5281ac7e96bcf4",
-      "merge": "5d5bfca9c2fe033cdf2cede81f32503bd8a66406",
-      "ci_runs": [34900722736],
-      "evidence_class": "Metadata/Static"
-    },
-    "seams": {
-      "issue": 12,
-      "path": "docs/architecture/runtime-recomposition/D0-seam-receipt.json",
-      "git_blob_sha": "09edcda3d3c87ccb9b40465cd1d619f688c766d8",
-      "inventory_path": "docs/architecture/runtime-recomposition/D0-seam-inventory.json",
-      "inventory_git_blob_sha": "fb1bd95e8bfb914a15cee25587598da5a4d44313",
-      "merge": "4d266a23a6ceede69f2c4a0c782a1d54430749b4",
-      "ci_runs": [34907915973, 34907990818],
-      "evidence_class": "Static/Metadata"
-    },
-    "goldens": {
-      "issue": 13,
-      "path": "docs/architecture/runtime-recomposition/D0-golden-receipt.json",
-      "git_blob_sha": "1ef4cb20f5f42c6dc07370f64b775f1025823364",
-      "merge": "6e4dbe70d04bc81e98bcc41653e1eb61e0ec38bb",
-      "ci_runs": [34902006353, 34902178966],
-      "evidence_class": "Runtime-subset + Metadata"
-    }
+    "pin": {"issue":11,"path":"docs/architecture/runtime-recomposition/D0-pin-receipt.json","git_blob_sha":"e6c54a4b34fd0aad6e86d750dd5281ac7e96bcf4","merge":"5d5bfca9c2fe033cdf2cede81f32503bd8a66406","ci_runs":[34900722736],"evidence_class":"Metadata/Static"},
+    "seams": {"issue":12,"path":"docs/architecture/runtime-recomposition/D0-seam-receipt.json","git_blob_sha":"09edcda3d3c87ccb9b40465cd1d619f688c766d8","inventory_path":"docs/architecture/runtime-recomposition/D0-seam-inventory.json","inventory_git_blob_sha":"fb1bd95e8bfb914a15cee25587598da5a4d44313","merge":"4d266a23a6ceede69f2c4a0c782a1d54430749b4","ci_runs":[34907915973,34907990818],"evidence_class":"Static/Metadata"},
+    "goldens": {"issue":13,"path":"docs/architecture/runtime-recomposition/D0-golden-receipt.json","git_blob_sha":"1ef4cb20f5f42c6dc07370f64b775f1025823364","merge":"6e4dbe70d04bc81e98bcc41653e1eb61e0ec38bb","ci_runs":[34902006353,34902178966],"evidence_class":"Runtime-subset + Metadata"}
   },
   "dependency_mode": {
-    "d0_d1": "detached-checkout-at-exact-revision",
-    "d2": "cargo-git-exact-rev",
-    "d2_repository": "https://github.com/tommy-ca/hftbacktest",
-    "d2_revision": "058cfefd9740b6857bb875bad4d5e6547a88379a",
-    "floating_branch_or_tag": "forbidden",
-    "dependency_direction": "chronforge -> hftbacktest only",
-    "reverse_dependency": "forbidden",
-    "titan_runtime_dependency": false,
-    "qstack_runtime_dependency": false,
-    "pstack_runtime_dependency": false
+    "d0_d1":"detached-checkout-at-exact-revision","d2":"cargo-git-exact-rev","d2_repository":"https://github.com/tommy-ca/hftbacktest","d2_revision":"058cfefd9740b6857bb875bad4d5e6547a88379a","floating_branch_or_tag":"forbidden","dependency_direction":"chronforge -> hftbacktest only","reverse_dependency":"forbidden","titan_runtime_dependency":false,"qstack_runtime_dependency":false,"pstack_runtime_dependency":false
   },
   "ownership": {
-    "hftbacktest": ["depth state", "queue semantics/state", "matching/fills", "latency transport", "fee calculation"],
-    "chronforge": ["canonical IDs/units", "EventKey/EventPhase", "canonical execution schemas", "runtime/result/determinism receipts"],
-    "second_matching_engine": false,
-    "one_authority_per_state": true
+    "hftbacktest":["depth state","queue semantics/state","matching/fills","latency transport","fee calculation"],
+    "chronforge":["canonical IDs/units","EventKey/EventPhase","canonical execution schemas","runtime/result/determinism receipts"],
+    "second_matching_engine":false,"one_authority_per_state":true
   },
   "acceptance": {
-    "A-UP-001": {"status": "PASS", "evidence_class": "Runtime-subset", "source": "D0GoldenReceipt exact-pin Rust backtest corpus"},
-    "A-UP-002": {"status": "PASS-scoped", "evidence_class": "Runtime-subset + Metadata", "source": "targeted BinaryFeeModel tests + pinned Polymarket artifact hashes", "limitation": "Python/PyO3 runtime not executed"},
-    "A-UP-003": {"status": "PASS", "evidence_class": "Static/Metadata", "source": "D0PinReceipt + D0SeamInventoryReceipt", "claim": "additive ChronForge architecture; no Titan tree or second matching engine"}
+    "A-UP-001":{"status":"PASS","evidence_class":"Runtime-subset","source":"D0GoldenReceipt exact-pin Rust backtest corpus"},
+    "A-UP-002":{"status":"PASS-scoped","evidence_class":"Runtime-subset + Metadata","source":"targeted BinaryFeeModel tests + pinned Polymarket artifact hashes","limitation":"Python/PyO3 runtime not executed"},
+    "A-UP-003":{"status":"PASS","evidence_class":"Static/Metadata","source":"D0PinReceipt + D0SeamInventoryReceipt","claim":"additive ChronForge architecture; no Titan tree or second matching engine"}
   },
-  "discrepancy_register": {
-    "path": "docs/architecture/runtime-recomposition/D0-discrepancy-register.json",
-    "unresolved_blocking_count": 0,
-    "resolved_metadata_count": 4
-  },
+  "discrepancy_register": {"path":"docs/architecture/runtime-recomposition/D0-discrepancy-register.json","unresolved_blocking_count":0,"resolved_metadata_count":4},
   "accepted_limitations": [
     "Python/PyO3 runtime is not proven",
     "default live/iceoryx is not proven",
@@ -100,33 +46,26 @@
     "historical v1 blobs are byte-preserved under new filenames; embedded creation-time path/link strings retain their original context"
   ],
   "historical_characterization": {
-    "receipt": "docs/architecture/runtime-recomposition/D0-baseline-characterization-receipt-v1.json",
-    "receipt_git_blob_sha": "11991356daed7a2c6913982bb64882817ed55084",
-    "document": "docs/architecture/runtime-recomposition/D0-baseline-characterization-v1.md",
-    "document_git_blob_sha": "d19695acef4f8d59b576233d807b3b04e9998b37",
-    "preserved_unchanged": true,
-    "embedded_paths_are_historical": true
+    "receipt":"docs/architecture/runtime-recomposition/D0-baseline-characterization-receipt-v1.json","receipt_git_blob_sha":"11991356daed7a2c6913982bb64882817ed55084","document":"docs/architecture/runtime-recomposition/D0-baseline-characterization-v1.md","document_git_blob_sha":"d19695acef4f8d59b576233d807b3b04e9998b37","preserved_unchanged":true,"embedded_paths_are_historical":true
   },
   "interrogate": {
-    "issue": 91,
-    "status": "PENDING",
-    "receipt": null,
-    "unresolved_blocking_findings": null
+    "issue":91,
+    "status":"PASS",
+    "receipt":"docs/architecture/runtime-recomposition/D0-join-interrogate-receipt.json",
+    "reviewed_candidate_head":"994a9c2881a37ec30e987fa9e95540acc9681b13",
+    "candidate_ci_run":34909053587,
+    "unresolved_blocking_findings":0
   },
   "verification": {
-    "candidate_lever": "python3 tools/verify/verify_d0_join.py --candidate",
-    "prestamp_lever": "python3 tools/verify/verify_d0_join.py --prestamp",
-    "strict_lever": "python3 tools/verify/verify_d0_join.py",
-    "profile": "bash tools/verify/verify.sh d0",
-    "status": "CANDIDATE_PENDING_INTERROGATE",
-    "workflow_run": null,
-    "workflow_head_sha": null
+    "candidate_lever":"python3 tools/verify/verify_d0_join.py --candidate",
+    "prestamp_lever":"python3 tools/verify/verify_d0_join.py --prestamp",
+    "strict_lever":"python3 tools/verify/verify_d0_join.py",
+    "profile":"bash tools/verify/verify.sh d0",
+    "status":"READY_FOR_FINAL_STAMP",
+    "workflow_run":null,
+    "workflow_head_sha":null
   },
-  "drift_policy": {
-    "any_child_pin_or_blob_change_invalidates_receipt": true,
-    "requires_explicit_d0_drift_review": true,
-    "silent_substitution": "forbidden"
-  },
+  "drift_policy": {"any_child_pin_or_blob_change_invalidates_receipt":true,"requires_explicit_d0_drift_review":true,"silent_substitution":"forbidden"},
   "d1_unlock": false,
   "must_not": [
     "rewrite child receipts to erase creation-time metadata",
