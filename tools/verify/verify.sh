@@ -42,6 +42,8 @@ case "$PROFILE" in
       python3 "$ROOT/tools/verify/validate_issue_orchestration.py"
     run_required control-plane issue-orchestration-self-test Static/Metadata/CI \
       python3 "$ROOT/tools/verify/test_issue_orchestration.py"
+    run_required control-plane issue-packet-render Static/Metadata/CI \
+      python3 "$ROOT/tools/verify/render_issue_packet.py" --check
     printf '%s\n' '{"schema":"chronforge.verification.profile-run/v1","profile":"control-plane","verdict":"PASS","evidence_class":"Static/Metadata/CI"}'
     ;;
   d0)
