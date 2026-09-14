@@ -17,6 +17,9 @@ HIST_RECEIPT = ROOT / "docs/architecture/runtime-recomposition/D0-baseline-chara
 HIST_DOC = ROOT / "docs/architecture/runtime-recomposition/D0-baseline-characterization-v1.md"
 INTERROGATE = ROOT / "docs/architecture/runtime-recomposition/D0-join-interrogate-receipt.json"
 EXPECTED_HBT = "058cfefd9740b6857bb875bad4d5e6547a88379a"
+EXPECTED_BASE = "8fb4872e8dcb5b743489cb826037e2b01638bcf1"
+EXPECTED_REVIEWED = "994a9c2881a37ec30e987fa9e95540acc9681b13"
+EXPECTED_REVIEWED_CI = 34909053587
 EXPECTED_BLOBS = {
     "pin": "e6c54a4b34fd0aad6e86d750dd5281ac7e96bcf4",
     "seams": "09edcda3d3c87ccb9b40465cd1d619f688c766d8",
@@ -50,8 +53,7 @@ def main() -> int:
     args = parser.parse_args()
 
     issues: list[str] = []
-    required_paths = (JOIN, PIN, SEAM, INVENTORY, GOLDEN, DISC, HIST_RECEIPT, HIST_DOC)
-    for path in required_paths:
+    for path in (JOIN, PIN, SEAM, INVENTORY, GOLDEN, DISC, HIST_RECEIPT, HIST_DOC):
         if not path.is_file():
             issues.append(f"missing required join artifact: {path.relative_to(ROOT)}")
     if issues:
@@ -70,13 +72,12 @@ def main() -> int:
         issues.append("joined evidence class must remain composite Runtime-subset + Static/Metadata")
 
     children = joined.get("children", {})
-    blob_checks = [
+    for name, path, declared in (
         ("pin", PIN, children.get("pin", {}).get("git_blob_sha")),
         ("seams", SEAM, children.get("seams", {}).get("git_blob_sha")),
         ("inventory", INVENTORY, children.get("seams", {}).get("inventory_git_blob_sha")),
         ("goldens", GOLDEN, children.get("goldens", {}).get("git_blob_sha")),
-    ]
-    for name, path, declared in blob_checks:
+    ):
         actual = git_blob(path)
         if actual != EXPECTED_BLOBS[name]:
             issues.append(f"{name} child blob changed from accepted identity: {actual}")
@@ -114,12 +115,14 @@ def main() -> int:
     if joined_pins.get("pstack", {}).get("subtree") != child_pins.get("pstack", {}).get("subtree"):
         issues.append("joined pstack subtree drifted")
 
-    pin_hbt = child_pins.get("hftbacktest", {}).get("revision")
-    seam_hbt = seam.get("pin_receipt", {}).get("hftbacktest_revision")
-    inv_hbt = inventory.get("pin", {}).get("revision")
-    golden_hbt = golden.get("hftbacktest", {}).get("revision")
-    joined_hbt = joined_pins.get("hftbacktest", {}).get("revision")
-    if {pin_hbt, seam_hbt, inv_hbt, golden_hbt, joined_hbt} != {EXPECTED_HBT}:
+    hbt_values = {
+        child_pins.get("hftbacktest", {}).get("revision"),
+        seam.get("pin_receipt", {}).get("hftbacktest_revision"),
+        inventory.get("pin", {}).get("revision"),
+        golden.get("hftbacktest", {}).get("revision"),
+        joined_pins.get("hftbacktest", {}).get("revision"),
+    }
+    if hbt_values != {EXPECTED_HBT}:
         issues.append("hftbacktest revision is not identical across all D0 child/join artifacts")
 
     for child_name, expected in EXPECTED_ACCEPTANCE.items():
@@ -196,6 +199,12 @@ def main() -> int:
 
     interrogate = joined.get("interrogate", {})
     verification = joined.get("verification", {})
+    source = joined.get("chronforge_source", {})
+    if source.get("candidate_base_revision") != EXPECTED_BASE:
+        issues.append("ChronForge candidate base revision drifted")
+    if interrogate.get("status") == "PASS" and source.get("interrogate_reviewed_revision") != interrogate.get("reviewed_candidate_head"):
+        issues.append("ChronForge interrogate-reviewed source revision is inconsistent")
+
     if args.candidate:
         if interrogate.get("status") not in {"PENDING", "PASS"}:
             issues.append("candidate join has invalid interrogate state")
@@ -212,6 +221,10 @@ def main() -> int:
                 issues.append("invalid D0JoinInterrogateReceipt schema/binding")
             if ir.get("status") != "PASS" or ir.get("unresolved_blocking_findings") != 0:
                 issues.append("mandatory interrogate did not pass with zero blockers")
+            if ir.get("reviewed_candidate_head") != EXPECTED_REVIEWED or ir.get("candidate_ci_run") != EXPECTED_REVIEWED_CI:
+                issues.append("interrogate receipt is not bound to the final reviewed candidate head/CI")
+            if interrogate.get("reviewed_candidate_head") != ir.get("reviewed_candidate_head") or interrogate.get("candidate_ci_run") != ir.get("candidate_ci_run"):
+                issues.append("joined receipt interrogate binding differs from interrogate receipt")
         if interrogate.get("status") != "PASS" or interrogate.get("unresolved_blocking_findings") != 0:
             issues.append("joined receipt does not bind interrogate PASS")
         if args.prestamp:
@@ -219,6 +232,8 @@ def main() -> int:
                 issues.append("prestamp verification state must be READY_FOR_FINAL_STAMP")
             if joined.get("d1_unlock") is not False:
                 issues.append("prestamp receipt must not unlock D1")
+            if source.get("accepted_proof_revision") is not None:
+                issues.append("prestamp source must not claim an accepted proof revision before workflow stamping")
         else:
             if verification.get("status") != "ACCEPTED_CI":
                 issues.append("strict joined receipt must be stamped ACCEPTED_CI")
@@ -227,6 +242,10 @@ def main() -> int:
             head = verification.get("workflow_head_sha")
             if not isinstance(head, str) or len(head) != 40:
                 issues.append("strict joined receipt lacks final workflow_head_sha")
+            if source.get("accepted_proof_revision") != head:
+                issues.append("ChronForge accepted proof revision must equal stamped workflow head")
+            if verification.get("stamp_requires_strict_rerun") is not True:
+                issues.append("strict joined receipt must require post-stamp CI validation")
             if joined.get("d1_unlock") is not True:
                 issues.append("strict accepted joined receipt must explicitly unlock D1")
 
@@ -236,7 +255,7 @@ def main() -> int:
         "verdict": "ISSUES" if issues else "PASS",
         "evidence_class": "Composite: Runtime-subset + Static/Metadata",
         "issues": issues,
-        "limitations": ["This verifier composes accepted D0 evidence; only #92 strict stamped-head PASS authorizes D1 activation."],
+        "limitations": ["This verifier composes accepted D0 evidence; only #92 strict stamped-head PASS authorizes authoritative D1 graph activation."],
     }
     print(json.dumps(result, sort_keys=True))
     return 1 if issues else 0
