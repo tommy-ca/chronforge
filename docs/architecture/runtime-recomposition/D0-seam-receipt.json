@@ -1,0 +1,45 @@
+{
+  "schema": "chronforge.D0SeamInventoryReceipt/v1",
+  "issue": 12,
+  "internal_join_issue": 69,
+  "implementation_issue": 72,
+  "pin_receipt": {
+    "path": "docs/architecture/runtime-recomposition/D0-pin-receipt.json",
+    "issue": 11,
+    "accepted_merge": "5d5bfca9c2fe033cdf2cede81f32503bd8a66406",
+    "ci_run": 34900722736,
+    "hftbacktest_revision": "058cfefd9740b6857bb875bad4d5e6547a88379a"
+  },
+  "inventory": {
+    "path": "docs/architecture/runtime-recomposition/D0-seam-inventory.json",
+    "git_blob_sha": "fb1bd95e8bfb914a15cee25587598da5a4d44313",
+    "seam_count": 20,
+    "swarm_children": [62, 63, 64, 65, 66, 67]
+  },
+  "adapter_contract": {
+    "kernel_authorities_preserved": true,
+    "second_matching_engine": false,
+    "reverse_dependency": false
+  },
+  "verification": {
+    "commands": [
+      "python3 tools/verify/verify_d0_seams.py --structure-only",
+      "python3 tools/verify/verify_d0_seams.py",
+      "python3 tools/verify/verify_d0_seam_receipt.py",
+      "bash tools/verify/verify.sh d0"
+    ],
+    "workflow_run": 34907915973,
+    "workflow_head_sha": "ba18f719ebf9f22c3536e3192260ec5f619549e3",
+    "status": "ACCEPTED_CI",
+    "evidence_class": "Static/Metadata"
+  },
+  "handoff": {
+    "consumer": 14,
+    "does_not_accept_d0_join": true
+  },
+  "limitations": [
+    "This receipt proves source-level seam ownership and pin alignment, not Runtime adapter behavior.",
+    "Live/Python surfaces are classified/deferred, not executed.",
+    "D0.J remains blocked until the mandatory #14 join/interrogate lever passes."
+  ]
+}
