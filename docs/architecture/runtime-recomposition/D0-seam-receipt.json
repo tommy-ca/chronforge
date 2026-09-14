@@ -28,9 +28,9 @@
       "python3 tools/verify/verify_d0_seam_receipt.py",
       "bash tools/verify/verify.sh d0"
     ],
-    "workflow_run": null,
-    "workflow_head_sha": null,
-    "status": "PENDING_HEAD_CI",
+    "workflow_run": 34907915973,
+    "workflow_head_sha": "ba18f719ebf9f22c3536e3192260ec5f619549e3",
+    "status": "ACCEPTED_CI",
     "evidence_class": "Static/Metadata"
   },
   "handoff": {
