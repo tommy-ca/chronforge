@@ -1,0 +1,25 @@
+# Rust / Cargo
+/target/
+**/target/
+Cargo.lock
+**/*.rs.bk
+*.pdb
+
+# IDE / editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env / local
+.env
+.env.*
+!.env.example
+
+# Worktrees / local orch
+.worktrees/

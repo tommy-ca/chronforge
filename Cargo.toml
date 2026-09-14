@@ -1,0 +1,13 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/hbt-engine",
+    "crates/hbt-runtime",
+]
+# Optional Phase-2 member (D5 Soft≠green) — omit until selected:
+# "crates/hbt-live",
+
+[workspace.package]
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/tommy-ca/chronforge"
