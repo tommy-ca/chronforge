@@ -55,6 +55,8 @@ case "$PROFILE" in
       python3 "$ROOT/tools/verify/verify_d0_pin_receipt.py"
     run_required d0 d0-seam-inventory Static/Metadata \
       python3 "$ROOT/tools/verify/verify_d0_seams.py"
+    run_required d0 d0-seam-receipt Static/Metadata \
+      python3 "$ROOT/tools/verify/verify_d0_seam_receipt.py"
     run_required d0 d0-golden-receipt Runtime-subset/Metadata \
       python3 "$ROOT/tools/verify/verify_d0_golden_receipt.py"
     run_required d0 d0-baseline-receipt Metadata \
