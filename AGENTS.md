@@ -97,6 +97,33 @@ A lower evidence class never implies a higher one. Timeout, skipped, unavailable
 
 `cargo check` is not Runtime PASS. OpenSpec validation is not Runtime PASS. Runtime PASS is not PAPER/LIVE PASS.
 
+## Project verification
+
+Use the project-local `.cursor/skills/verify-chronforge/` adapter and repo-owned tools for executable proof. Generic verification-skill creation/maintenance remains upstream pstack-owned; quant semantics remain qstack-owned.
+
+Start every non-trivial verification with:
+
+```bash
+bash tools/verify/doctor.sh
+```
+
+Then run the smallest applicable profile:
+
+```bash
+bash tools/verify/verify.sh control-plane
+bash tools/verify/verify.sh d0
+```
+
+D1-D6 profiles MUST remain `BLOCKED` until their executable levers exist. Do not turn compilation/specification success into synthetic Runtime proof.
+
+For repeated canonical-output equality use:
+
+```bash
+python3 tools/verify/repeat_hash.py -n <N> -- <canonical-output-command>
+```
+
+See `docs/verification/README.md` and `.cursor/skills/verify-chronforge/features/`.
+
 ## Read-only work
 
 Pure investigation, explanation, inventory, or evidence gathering may proceed without creating a new product OpenSpec change. If that work leads to material implementation, create/bind the OpenSpec change before apply.
@@ -117,10 +144,11 @@ Before coding:
 
 Before merge:
 
-1. Run project tests/checks required by the issue.
-2. Run strict OpenSpec validation for the active change when applicable.
-3. Record acceptance IDs and evidence classes honestly.
-4. Confirm no reverse/runtime dependency on control-plane tooling.
+1. Run `bash tools/verify/doctor.sh` and the applicable `verify-chronforge` profile(s).
+2. Run phase-specific project tests/checks required by the issue.
+3. Run strict OpenSpec validation for the active change when applicable (the control-plane profile includes it).
+4. Record acceptance IDs and evidence classes honestly.
+5. Confirm no reverse/runtime dependency on control-plane tooling.
 
 After implementation merge:
 

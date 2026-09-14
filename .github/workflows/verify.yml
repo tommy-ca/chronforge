@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  openspec-and-rust:
+  chronforge-verification:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout ChronForge
@@ -20,9 +20,6 @@ jobs:
         with:
           node-version: 24
 
-      - name: Strict OpenSpec validation
-        run: npx --yes @fission-ai/openspec@1.13.0 validate --all --strict
-
       - name: Rust toolchain
         run: |
           rustup toolchain install stable --profile minimal
@@ -30,12 +27,19 @@ jobs:
           rustc --version
           cargo --version
 
-      - name: Workspace compile check
-        run: cargo check --workspace
+      - name: Verification doctor
+        run: bash tools/verify/doctor.sh
 
-      - name: Control-plane dependency guard
+      - name: Control-plane profile
+        run: bash tools/verify/verify.sh control-plane
+
+      - name: D0 receipt profile
+        run: bash tools/verify/verify.sh d0
+
+      - name: Deterministic repeat helper self-test
         run: |
-          if grep -RInE '(^|[^A-Za-z0-9_-])(qstack|qorch|pstack|openspec)([^A-Za-z0-9_-]|$)' crates/*/Cargo.toml; then
-            echo 'Runtime crates must not depend on qstack/qorch/pstack/OpenSpec.' >&2
+          python3 tools/verify/repeat_hash.py -n 3 -- python3 -c 'print("stable")'
+          if python3 tools/verify/repeat_hash.py -n 3 -- python3 -c 'import os; print(os.environ["CHRONFORGE_VERIFY_RUN_INDEX"])'; then
+            echo 'repeat_hash failed to detect divergent canonical output' >&2
             exit 1
           fi
