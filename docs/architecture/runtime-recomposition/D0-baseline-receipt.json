@@ -6,7 +6,7 @@
   "chronforge_source": {
     "candidate_base_revision": "8fb4872e8dcb5b743489cb826037e2b01638bcf1",
     "interrogate_reviewed_revision": "994a9c2881a37ec30e987fa9e95540acc9681b13",
-    "accepted_proof_revision": null
+    "accepted_proof_revision": "d7f8cc0d95db9d55103793d70b91ed66dfc26353"
   },
   "evidence_class": "Composite: Runtime-subset + Static/Metadata",
   "live_pass": false,
@@ -49,29 +49,25 @@
     "receipt":"docs/architecture/runtime-recomposition/D0-baseline-characterization-receipt-v1.json","receipt_git_blob_sha":"11991356daed7a2c6913982bb64882817ed55084","document":"docs/architecture/runtime-recomposition/D0-baseline-characterization-v1.md","document_git_blob_sha":"d19695acef4f8d59b576233d807b3b04e9998b37","preserved_unchanged":true,"embedded_paths_are_historical":true
   },
   "interrogate": {
-    "issue":91,
-    "status":"PASS",
-    "receipt":"docs/architecture/runtime-recomposition/D0-join-interrogate-receipt.json",
-    "reviewed_candidate_head":"994a9c2881a37ec30e987fa9e95540acc9681b13",
-    "candidate_ci_run":34909053587,
-    "unresolved_blocking_findings":0
+    "issue":91,"status":"PASS","receipt":"docs/architecture/runtime-recomposition/D0-join-interrogate-receipt.json","reviewed_candidate_head":"994a9c2881a37ec30e987fa9e95540acc9681b13","candidate_ci_run":34909053587,"unresolved_blocking_findings":0
   },
   "verification": {
     "candidate_lever":"python3 tools/verify/verify_d0_join.py --candidate",
     "prestamp_lever":"python3 tools/verify/verify_d0_join.py --prestamp",
     "strict_lever":"python3 tools/verify/verify_d0_join.py",
     "profile":"bash tools/verify/verify.sh d0",
-    "status":"READY_FOR_FINAL_STAMP",
-    "workflow_run":null,
-    "workflow_head_sha":null
+    "status":"ACCEPTED_CI",
+    "workflow_run":34909153517,
+    "workflow_head_sha":"d7f8cc0d95db9d55103793d70b91ed66dfc26353",
+    "stamp_requires_strict_rerun":true
   },
   "drift_policy": {"any_child_pin_or_blob_change_invalidates_receipt":true,"requires_explicit_d0_drift_review":true,"silent_substitution":"forbidden"},
-  "d1_unlock": false,
+  "d1_unlock": true,
   "must_not": [
     "rewrite child receipts to erase creation-time metadata",
     "promote Runtime-subset to PAPER or LIVE",
     "make Titan/qstack/pstack/qorch runtime dependencies",
     "introduce a second matching engine or duplicate state authority",
-    "activate D1 before #91 interrogate and #92 final verification pass"
+    "activate D1 in the authoritative graph before #92 strict stamped-head validation and #14 acceptance"
   ]
 }
