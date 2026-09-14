@@ -3,6 +3,7 @@
   "issue": 14,
   "audit_children": [86, 87, 88, 89],
   "unresolved_blocking_count": 0,
+  "blocking_contradictions": [],
   "discrepancies": [
     {
       "id": "D0-DISC-001",
@@ -50,7 +51,8 @@
     "default live/iceoryx feature set is not proven by D0",
     "PAPER and LIVE readiness are not proven by D0",
     "D2 canonical adapter behavior is not implied by kernel goldens",
-    "granular L2/L3, lifecycle and partial-fill fixture gaps remain explicit D2 obligations"
+    "granular L2/L3, lifecycle and partial-fill fixture gaps remain explicit D2 obligations",
+    "byte-preserved v1 historical artifacts retain creation-time embedded path/link semantics after relocation"
   ],
   "deferred_obligations": [
     {"phase": "D1", "obligation": "define canonical IDs/units/ordering/execution/account/receipt contracts without duplicating kernel truth"},
