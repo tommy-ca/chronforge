@@ -46,6 +46,8 @@ case "$PROFILE" in
       python3 "$ROOT/tools/verify/render_issue_packet.py" --check
     run_required control-plane issue-packet-sync-self-test Static/Metadata/CI \
       python3 "$ROOT/tools/verify/sync_issue_packet.py" --self-test
+    run_required control-plane d0-seam-inventory-structure Static/Metadata/CI \
+      python3 "$ROOT/tools/verify/verify_d0_seams.py" --structure-only
     printf '%s\n' '{"schema":"chronforge.verification.profile-run/v1","profile":"control-plane","verdict":"PASS","evidence_class":"Static/Metadata/CI"}'
     ;;
   d0)
