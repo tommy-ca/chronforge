@@ -66,6 +66,8 @@
   "dependency_mode": {
     "d0_d1": "detached-checkout-at-exact-revision",
     "d2": "cargo-git-exact-rev",
+    "d2_repository": "https://github.com/tommy-ca/hftbacktest",
+    "d2_revision": "058cfefd9740b6857bb875bad4d5e6547a88379a",
     "floating_branch_or_tag": "forbidden",
     "dependency_direction": "chronforge -> hftbacktest only",
     "reverse_dependency": "forbidden",
