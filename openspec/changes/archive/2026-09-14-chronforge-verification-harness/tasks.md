@@ -28,5 +28,5 @@
 - [x] 4.3 Run `tools/verify/verify.sh control-plane` — PR #45 workflow run `34892562672` passed.
 - [x] 4.4 Run `tools/verify/verify.sh d0` — PR #45 workflow run `34892562672` passed with Metadata evidence only.
 - [x] 4.5 Self-test `repeat_hash.py` with one stable and one intentionally divergent command — PR #45 workflow run `34892562672` passed; divergence was correctly rejected.
-- [ ] 4.6 Merge implementation before archive.
-- [ ] 4.7 Archive change and read back living `chronforge-verification-harness` spec.
+- [x] 4.6 Merge implementation before archive — PR #45 merged as `cb0e0f0d1e798d1d093fed70223edfb3a8c697db`; final-head workflow run `34892623082` passed.
+- [ ] 4.7 Archive change and read back living `chronforge-verification-harness` spec — archive/read-back completion is recorded by issue #43 after the archive PR merges.
