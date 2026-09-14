@@ -1,0 +1,35 @@
+{
+  "schema": "chronforge.issue-sync-receipt/v1",
+  "packet_schema": "chronforge.issue-orchestration-fragment/v2",
+  "repository": "tommy-ca/chronforge",
+  "matrix_merge": "9d1169b96f1b7fbdeca54a5b93ca73f988ab8714",
+  "intent_merge": "8c05d1e29c9c4284985ab43a131204f6bcab6962",
+  "issues": [1,2,3,4,5,6,7,8,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29],
+  "issue_count": 27,
+  "phase_state_repairs": [
+    {
+      "issue": 2,
+      "from": "closed/completed",
+      "to": "open/reopened",
+      "reason": "D0 phase completion is owned by accepted #14 D0BaselineReceipt, not historical PR auto-close"
+    }
+  ],
+  "d0_frontier": {
+    "ready": [11,12],
+    "ready_notes": {"12": "read-only discovery may start; VERIFY/HANDOFF waits for #11"},
+    "blocked": [13,14],
+    "dependencies": {
+      "13": {"start_after": [11], "verify_after": [11]},
+      "14": {"start_after": [11,12,13], "verify_after": [11,12,13]}
+    }
+  },
+  "evidence_class": "Static/Metadata/GitHub-state",
+  "runtime_evidence": false,
+  "paper_evidence": false,
+  "live_evidence": false,
+  "limitations": [
+    "This receipt records GitHub issue-state synchronization; it does not prove runtime correctness.",
+    "The repository-local packet renderer validates deterministic generation, while remote issue-body state is maintained through GitHub mutations and should be reconciled again when matrix rows change.",
+    "H2 remains open until a real pstack multi-model interrogate PASS and OpenSpec archive/read-back."
+  ]
+}
