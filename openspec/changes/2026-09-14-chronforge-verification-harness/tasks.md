@@ -23,10 +23,10 @@
 
 ## 4. Verification and archive
 
-- [ ] 4.1 Run strict OpenSpec validation.
-- [ ] 4.2 Run `tools/verify/doctor.sh`.
-- [ ] 4.3 Run `tools/verify/verify.sh control-plane`.
-- [ ] 4.4 Run `tools/verify/verify.sh d0`.
-- [ ] 4.5 Self-test `repeat_hash.py` with one stable and one intentionally divergent command.
+- [x] 4.1 Run strict OpenSpec validation — PR #45 workflow run `34892562672` passed via the control-plane profile.
+- [x] 4.2 Run `tools/verify/doctor.sh` — PR #45 workflow run `34892562672` passed.
+- [x] 4.3 Run `tools/verify/verify.sh control-plane` — PR #45 workflow run `34892562672` passed.
+- [x] 4.4 Run `tools/verify/verify.sh d0` — PR #45 workflow run `34892562672` passed with Metadata evidence only.
+- [x] 4.5 Self-test `repeat_hash.py` with one stable and one intentionally divergent command — PR #45 workflow run `34892562672` passed; divergence was correctly rejected.
 - [ ] 4.6 Merge implementation before archive.
 - [ ] 4.7 Archive change and read back living `chronforge-verification-harness` spec.
