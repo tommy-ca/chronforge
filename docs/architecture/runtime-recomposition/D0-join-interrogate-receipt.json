@@ -1,0 +1,34 @@
+{
+  "schema": "chronforge.D0JoinInterrogateReceipt/v1",
+  "issue": 91,
+  "parent_join_issue": 14,
+  "join_implementation_issue": 90,
+  "reviewed_pr": 93,
+  "reviewed_candidate_head": "994a9c2881a37ec30e987fa9e95540acc9681b13",
+  "candidate_ci_run": 34909053587,
+  "status": "PASS",
+  "unresolved_blocking_findings": 0,
+  "findings": [
+    {"id":"F-001","initial_class":"blocking","disposition":"resolved","resolution":"joined pins changed from bare SHAs to structured revision/role/dependency objects"},
+    {"id":"F-002","initial_class":"blocking","disposition":"resolved","resolution":"join verifier now cross-validates every Titan/qstack/pstack/hftbacktest pin and role against D0PinReceipt"},
+    {"id":"F-003","initial_class":"blocking","disposition":"resolved","resolution":"join verifier now requires exact accepted child merge SHA and CI run sets"},
+    {"id":"F-004","initial_class":"nonblocking-hardening","disposition":"resolved","resolution":"discrepancy register now explicitly carries blocking_contradictions=[]"},
+    {"id":"F-005","initial_class":"nonblocking","disposition":"accepted-limitation","resolution":"byte-preserved v1 artifacts retain creation-time embedded path/link semantics after relocation; child history is not rewritten"},
+    {"id":"F-006","initial_class":"blocking","disposition":"resolved","resolution":"joined D2 dependency mode now binds exact repository and revision and verifier cross-checks D0PinReceipt"},
+    {"id":"F-007","initial_class":"blocking","disposition":"resolved","resolution":"join verifier now enforces child issue numbers and exact evidence classes in addition to merge/CI identities"},
+    {"id":"F-008","initial_class":"nonblocking","disposition":"deferred-to-final-stamp","resolution":"#92 must bind final proof workflow/head and only then may d1_unlock become true"}
+  ],
+  "adversarial_checks": {
+    "exact_pin_and_content_binding": "PASS",
+    "one_authority_per_state": "PASS",
+    "no_second_matching_engine": "PASS",
+    "no_reverse_dependency": "PASS",
+    "evidence_class_honesty": "PASS",
+    "limitations_preserved": "PASS",
+    "drift_invalidation": "PASS",
+    "no_control_plane_runtime_dependency": "PASS",
+    "no_premature_d1_activation": "PASS"
+  },
+  "arena": "skipped: join validates accepted evidence and does not choose a competing architecture",
+  "next_gate": "#92 prestamp + strict final-head verification"
+}
