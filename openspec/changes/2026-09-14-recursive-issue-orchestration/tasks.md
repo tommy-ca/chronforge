@@ -21,7 +21,7 @@
 - [x] 3.1 Add a project-owned orchestration-matrix validator.
 - [x] 3.2 Extend `verify-chronforge control-plane` to validate matrix schema/coverage and issue-map consistency that repository-local metadata can prove.
 - [x] 3.3 Keep future D1-D6 profiles BLOCKED while target-specific runtime levers are unavailable.
-- [ ] 3.4 Run stable/negative fixtures for the matrix validator.
+- [x] 3.4 Run stable/negative fixtures for the matrix validator (PR #52 CI `34896425399` rejected an intentionally incomplete required-issue set as expected).
 
 ## 4. Lifecycle
 
