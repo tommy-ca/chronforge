@@ -21,13 +21,14 @@
 - [x] 3.1 Add a project-owned orchestration-matrix validator.
 - [x] 3.2 Extend `verify-chronforge control-plane` to validate matrix schema/coverage and issue-map consistency that repository-local metadata can prove.
 - [x] 3.3 Keep future D1-D6 profiles BLOCKED while target-specific runtime levers are unavailable.
-- [x] 3.4 Run stable/negative fixtures for the matrix validator (PR #52 CI `34896425399` rejected an intentionally incomplete required-issue set as expected).
+- [x] 3.4 Run stable/negative fixtures for the matrix validator (PR #52 final-head CI `34896508871` passed with the negative fixture rejecting an intentionally incomplete required-issue set).
 
 ## 4. Lifecycle
 
 - [x] 4.1 Merge H2 intent/spec PR before normal implementation apply (PR #51 -> `c1f486379d97054046a0d0c9290cfa88bf522e0c`).
-- [ ] 4.2 Implement #49 and merge with CI green.
-- [ ] 4.3 Run required interrogate review on the cross-cutting orchestration implementation; resolve all `Act on` findings.
-- [ ] 4.4 Archive the OpenSpec change only after implementation merge.
+- [x] 4.2 Implement #49 and merge with CI green (PR #52 -> `8392e5f1e267860301e365c8157aff66c5c04b9c`, final-head CI `34896508871` SUCCESS).
+- [x] 4.2a Confirm upstream pstack interrogate supports explicit multi-model reviewer configuration; define the exact H2 run/receipt contract in `docs/roadmap/H2-INTERROGATE-RUNBOOK.md`.
+- [ ] 4.3 Run required interrogate review on the cross-cutting orchestration implementation with at least two independent reviewer model families; resolve all `Act on` findings.
+- [ ] 4.4 Archive the OpenSpec change only after 4.3 PASS.
 - [ ] 4.5 Read back the living `chronforge-recursive-issue-orchestration` spec from `main`.
-- [ ] 4.6 Record PR/merge/CI receipts in #47-#50.
+- [ ] 4.6 Record interrogate/archive/CI receipts in #47-#50 and close H2.
