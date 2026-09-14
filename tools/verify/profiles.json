@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "qstack_revision": "cf4e62f4ef98fe378393fa3adff8449ff9457024",
+  "pstack_revision": "be432a96ed36e48d05f44bf375864355f62263f9",
+  "profiles": {
+    "control-plane": {
+      "qstack": ["ChronForgeProjectProfile"],
+      "evidence_class": "Static/Metadata/CI",
+      "levers": ["openspec-strict", "cargo-check-workspace", "control-plane-guard"],
+      "availability": "ready"
+    },
+    "d0": {
+      "qstack": ["QD-15", "deterministic-runtime-audit"],
+      "evidence_class": "Metadata",
+      "levers": ["d0-receipt-validation"],
+      "availability": "ready",
+      "note": "Validates the landed D0 receipt only; it does not rerun external hftbacktest Runtime evidence."
+    },
+    "d1": {
+      "qstack": ["QD-06", "formal-state-model", "replay-parity", "deterministic-runtime-audit"],
+      "evidence_class": "formal/property + Runtime",
+      "levers": ["engine-contract-tests", "phase-order-property-tests"],
+      "availability": "blocked",
+      "blocker": "D1 implementation and executable contract levers do not exist yet."
+    },
+    "d2": {
+      "qstack": ["QD-05", "QD-06", "deterministic-runtime-audit", "replay-parity"],
+      "evidence_class": "Runtime",
+      "levers": ["kernel-adapter-goldens", "100-run-determinism"],
+      "availability": "blocked",
+      "blocker": "D2 kernel adapter and canonical deterministic output do not exist yet."
+    },
+    "d3": {
+      "qstack": ["QD-16", "strategy-runtime-contract", "replay-parity"],
+      "evidence_class": "Runtime",
+      "levers": ["strategy-runtime-lifecycle", "callback-serialization", "artifact-receipts"],
+      "availability": "blocked",
+      "blocker": "D3 native strategy runtime does not exist yet."
+    },
+    "d4": {
+      "qstack": ["QD-16", "ffi-selected"],
+      "evidence_class": "Runtime",
+      "levers": ["native-ffi-parity", "abi-layout"],
+      "availability": "blocked",
+      "blocker": "Optional FFI capability is not selected or implemented."
+    },
+    "d5": {
+      "qstack": ["QD-01", "QD-10", "bounded-hot-paths"],
+      "evidence_class": "Runtime/PAPER/LIVE",
+      "levers": ["bounded-event-engine", "reliable-gap-resync", "market-account-service"],
+      "availability": "blocked",
+      "blocker": "Optional live capability is not selected or implemented."
+    },
+    "d6": {
+      "qstack": ["QD-08", "QD-09", "QD-13", "selected-capabilities-only"],
+      "evidence_class": "formal/property + Runtime/PAPER/LIVE",
+      "levers": ["oms-ems-recovery-selected-capability-tests"],
+      "availability": "blocked",
+      "blocker": "Optional governance/recovery capabilities are not selected or implemented."
+    }
+  }
+}
