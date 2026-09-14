@@ -61,9 +61,9 @@ case "$PROFILE" in
       python3 "$ROOT/tools/verify/verify_d0_golden_receipt.py"
     run_required d0 d0-historical-characterization Static/Metadata \
       python3 "$ROOT/tools/verify/verify_d0_characterization_receipt.py"
-    run_required d0 d0-join-prestamp Runtime-subset/Static/Metadata \
-      python3 "$ROOT/tools/verify/verify_d0_join.py" --prestamp
-    printf '%s\n' '{"schema":"chronforge.verification.profile-run/v1","profile":"d0","verdict":"PASS","evidence_class":"Runtime-subset/Static/Metadata","limitations":["Mandatory #91 interrogate has passed. This is the #92 prestamp proof; D1 remains locked until the stamped receipt passes strict final-head validation."]}'
+    run_required d0 d0-join-strict Runtime-subset/Static/Metadata \
+      python3 "$ROOT/tools/verify/verify_d0_join.py"
+    printf '%s\n' '{"schema":"chronforge.verification.profile-run/v1","profile":"d0","verdict":"PASS","evidence_class":"Runtime-subset/Static/Metadata","limitations":["Strict D0 joined receipt is internally accepted. Authoritative D1 issue-state activation still waits for #92/#14 closure and the graph-state transition PR."]}'
     ;;
   d1|d2|d3|d4|d5|d6)
     python3 - "$ROOT/tools/verify/profiles.json" "$PROFILE" <<'PY'
