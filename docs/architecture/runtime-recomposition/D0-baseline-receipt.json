@@ -8,11 +8,32 @@
   "live_pass": false,
   "paper_pass": false,
   "pins": {
-    "hftbacktest": "058cfefd9740b6857bb875bad4d5e6547a88379a",
-    "titan": "3c56818f6e412f21bc8b305ff3dc0f6dc1aa7024",
-    "qstack_runtime_recomposition": "6d124b93b6008851c1fc48aaef5ef6a20d6535b6",
-    "qstack_chronforge_profile": "cf4e62f4ef98fe378393fa3adff8449ff9457024",
-    "pstack": "be432a96ed36e48d05f44bf375864355f62263f9"
+    "hftbacktest": {
+      "revision": "058cfefd9740b6857bb875bad4d5e6547a88379a",
+      "role": "external-microstructure-kernel",
+      "upstream": "nkaz001/hftbacktest"
+    },
+    "titan": {
+      "revision": "3c56818f6e412f21bc8b305ff3dc0f6dc1aa7024",
+      "role": "reference-evidence-only",
+      "runtime_dependency": false
+    },
+    "qstack_runtime_recomposition": {
+      "revision": "6d124b93b6008851c1fc48aaef5ef6a20d6535b6",
+      "role": "development-domain-semantics",
+      "runtime_dependency": false
+    },
+    "qstack_chronforge_profile": {
+      "revision": "cf4e62f4ef98fe378393fa3adff8449ff9457024",
+      "role": "development-project-profile",
+      "runtime_dependency": false
+    },
+    "pstack": {
+      "revision": "be432a96ed36e48d05f44bf375864355f62263f9",
+      "role": "generic-development-orchestration-substrate",
+      "subtree": "pstack/",
+      "runtime_dependency": false
+    }
   },
   "children": {
     "pin": {
@@ -73,12 +94,16 @@
     "default live/iceoryx is not proven",
     "PAPER/LIVE readiness is not proven",
     "D2 adapter behavior is not implied by kernel goldens",
-    "granular lifecycle/partial-fill coverage gaps remain D2 obligations"
+    "granular lifecycle/partial-fill coverage gaps remain D2 obligations",
+    "historical v1 blobs are byte-preserved under new filenames; embedded creation-time path/link strings retain their original context"
   ],
   "historical_characterization": {
     "receipt": "docs/architecture/runtime-recomposition/D0-baseline-characterization-receipt-v1.json",
+    "receipt_git_blob_sha": "11991356daed7a2c6913982bb64882817ed55084",
     "document": "docs/architecture/runtime-recomposition/D0-baseline-characterization-v1.md",
-    "preserved_unchanged": true
+    "document_git_blob_sha": "d19695acef4f8d59b576233d807b3b04e9998b37",
+    "preserved_unchanged": true,
+    "embedded_paths_are_historical": true
   },
   "interrogate": {
     "issue": 91,
@@ -88,6 +113,7 @@
   },
   "verification": {
     "candidate_lever": "python3 tools/verify/verify_d0_join.py --candidate",
+    "prestamp_lever": "python3 tools/verify/verify_d0_join.py --prestamp",
     "strict_lever": "python3 tools/verify/verify_d0_join.py",
     "profile": "bash tools/verify/verify.sh d0",
     "status": "CANDIDATE_PENDING_INTERROGATE",
