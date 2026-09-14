@@ -54,7 +54,9 @@ living spec + SoftwareArtifactRef / RunReceipt / DeterminismReceipt
 
 H0 configures development control-plane behaviour only. It does not establish Runtime/PAPER/LIVE evidence for the trading engine.
 
-## Runtime program
+## Runtime program — actual current state
+
+PR #32 landed substantial D0 characterization and archived the D0 OpenSpec change, but the recursive child/join graph predates that PR and was not reconciled. The parent #2 auto-closed while #11-#14 remain open. Therefore **D1 is not yet graph-ready**.
 
 ```text
 #1 ChronForge runtime implementation program
@@ -62,11 +64,19 @@ H0 configures development control-plane behaviour only. It does not establish Ru
   +-> O0 qstack binding -------------------------------- COMPLETE
   |     #10 / PR #31 / e74dd7ea0dec315b84331fbc0bb941f3a2f9390f
   |
-  +-> D0 external hftbacktest characterization ---------- COMPLETE
-  |     #2 / PR #32 / 500e58899ed16d3c2c866c580a8f80e38276373b
+  +-> D0 characterization apply ------------------------ LANDED, JOIN PENDING
+  |     #2 parent auto-closed by PR #32
+  |     PR #32 / 500e58899ed16d3c2c866c580a8f80e38276373b
   |     archived OpenSpec: 2026-09-14-chronforge-d0-baseline
+  |     |
+  |     +-> #11 pin/dependency/provenance -------------- OPEN
+  |     +-> #12 seam inventory ------------------------- OPEN
+  |     +-> #13 executable baseline/goldens ------------ OPEN
+  |     `-> #14 D0.J join ------------------------------ OPEN / REQUIRED
+  |             |
+  |             `-> accepted D0 join receipt unlocks D1
   |
-  +-> D1 deterministic engine contracts ---------------- CURRENT RUNTIME FRONTIER
+  +-> D1 deterministic engine contracts ---------------- BLOCKED on #14
   |     #3
   |       #15 IDs / units / model identities -----------+
   |       #16 EventPhase / EventKey --------------------+--> #19 D1.J
@@ -105,9 +115,24 @@ H0 configures development control-plane behaviour only. It does not establish Ru
   `-> verified artifact handoff -> qorch research
 ```
 
+## Current runtime frontier
+
+After H0 harness setup, finish the D0 recursive contract before starting D1 implementation:
+
+```text
+#11 complete pin/dependency/provenance receipt -------+
+#12 complete machine-readable seam inventory ---------+--> #14 D0.J
+#13 complete baseline-test/golden artifact -----------+
+                                                       |
+                                                       v
+                                               D1 becomes READY
+```
+
+PR #32 already provides strong input evidence for all three leaves. Reuse that evidence; do not redo the characterization from scratch. Close each leaf only when its own acceptance criteria are explicitly satisfied, then accept #14 as the single phase gate.
+
 ## Intent rule for every D-phase
 
-D0 historical work already used OpenSpec. For D1 onward, each phase or material sub-capability MUST bind to an OpenSpec change before normal apply.
+D0 historical work already used OpenSpec. D1 onward MUST bind material implementation to an OpenSpec change before normal apply.
 
 Recommended granularity:
 
@@ -120,9 +145,9 @@ Recommended granularity:
 
 Do not create one OpenSpec change per trivial line-level task. OpenSpec captures durable intent/behaviour; issues capture execution state.
 
-## D1 intent graph
+## D1 intent graph — prepared but blocked
 
-D1 is the next runtime implementation frontier. Before coding D1 leaf issues, use an active D1 change such as:
+Once #14 is accepted, create/land a D1 change such as:
 
 ```text
 OpenSpec: chronforge-d1-engine-contracts
