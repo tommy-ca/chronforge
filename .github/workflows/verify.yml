@@ -36,6 +36,12 @@ jobs:
       - name: D0 receipt profile
         run: bash tools/verify/verify.sh d0
 
+      - name: D0 external golden corpus
+        if: github.event_name == 'pull_request' && github.head_ref == 'd0/13-golden-corpus'
+        run: |
+          python3 tools/verify/verify_d0_golden_receipt.py --allow-pending
+          bash tools/verify/d0_goldens.sh
+
       - name: Deterministic repeat helper self-test
         run: |
           python3 tools/verify/repeat_hash.py -n 3 -- python3 -c 'print("stable")'

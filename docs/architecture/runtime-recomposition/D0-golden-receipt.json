@@ -1,0 +1,76 @@
+{
+  "schema": "chronforge.D0GoldenReceipt/v1",
+  "issue": 13,
+  "internal_join_issue": 81,
+  "implementation_issue": 82,
+  "pin_receipt": "docs/architecture/runtime-recomposition/D0-pin-receipt.json",
+  "hftbacktest": {
+    "repository": "tommy-ca/hftbacktest",
+    "revision": "058cfefd9740b6857bb875bad4d5e6547a88379a",
+    "features": "backtest (no-default)"
+  },
+  "swarm": {
+    "children": [76, 77, 78, 79, 80],
+    "join": 81
+  },
+  "goldens": {
+    "commands": [
+      "cargo check -p hftbacktest --no-default-features --features backtest",
+      "cargo test -p hftbacktest --no-default-features --features backtest --lib",
+      "cargo test -p hftbacktest --no-default-features --features backtest --lib binary_fee"
+    ],
+    "fixture_sha256": {
+      "py-hftbacktest/tests/test_polymarket.py": "7ebbbd6baa407f1fad84da5a37ff246246689723db9414c6408281acbfe18b37",
+      "py-hftbacktest/hftbacktest/data/utils/polymarket.py": "b5cc1fac9a9be40d1c39a444d9d8fd975387f6ae003c917fb457f4213b0d3e3e",
+      "hftbacktest/src/backtest/models/fee.rs": "c6311a0c9f432e8f922702746d7481c6da0418a7c2c96ce929b58206b62a7177",
+      "examples/polymarket/smoke_converter.py": "32a57155e776c3ece89f81c20d78a203650f2e2200abab7f3b77476aead841e8"
+    }
+  },
+  "coverage": {
+    "76_l2_l3_kernel": {
+      "lever": "full pinned Rust --lib suite",
+      "evidence_class": "Runtime-subset",
+      "coverage_limit": "individual L2/L3 test names are not elevated to separate acceptance unless the pinned suite exposes stable addressable fixtures"
+    },
+    "77_queue_latency_fee": {
+      "lever": "full pinned Rust --lib suite + targeted binary_fee tests",
+      "evidence_class": "Runtime-subset"
+    },
+    "78_order_lifecycle": {
+      "lever": "full pinned Rust --lib suite",
+      "evidence_class": "Runtime-subset",
+      "coverage_limit": "unaddressed lifecycle cases remain D2 acceptance obligations rather than inferred PASS"
+    },
+    "79_partial_no_partial": {
+      "lever": "full pinned Rust --lib suite",
+      "evidence_class": "Runtime-subset",
+      "coverage_limit": "semantic distinction is source-characterized; any missing explicit fixture remains a declared D2 gap"
+    },
+    "80_polymarket_overlay": {
+      "lever": "targeted binary_fee Rust tests + four pinned SHA-256 identities",
+      "evidence_class": "Runtime-subset + Metadata",
+      "python_unittest_runtime_pass": false
+    }
+  },
+  "verification": {
+    "lever": "bash tools/verify/d0_goldens.sh",
+    "receipt_validator": "python3 tools/verify/verify_d0_golden_receipt.py",
+    "workflow_run": 34902006353,
+    "workflow_head_sha": "15e7f9c8fb28477ff6af42b5dae5c5126fcece91",
+    "status": "PASS",
+    "evidence_class": "Runtime-subset + Metadata",
+    "external_golden_step": "SUCCESS"
+  },
+  "limitations": [
+    "Default live/iceoryx feature set is not exercised.",
+    "Python unittest/PyO3 runtime is not exercised by the D0 lever.",
+    "No PAPER/LIVE claim is earned.",
+    "D0GoldenReceipt does not by itself accept #14 D0.J."
+  ],
+  "must_not": [
+    "silently update expected hashes to make a failing corpus pass",
+    "replace the exact hftbacktest commit with a branch or tag",
+    "promote unavailable Python/live evidence to Runtime/PAPER/LIVE PASS",
+    "treat a successful build as proof of all later D2 canonical adapter semantics"
+  ]
+}
