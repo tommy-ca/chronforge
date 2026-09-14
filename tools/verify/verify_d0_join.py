@@ -26,9 +26,9 @@ EXPECTED_BLOBS = {
     "historical_doc": "d19695acef4f8d59b576233d807b3b04e9998b37",
 }
 EXPECTED_ACCEPTANCE = {
-    "pin": {"merge": "5d5bfca9c2fe033cdf2cede81f32503bd8a66406", "ci_runs": [34900722736]},
-    "seams": {"merge": "4d266a23a6ceede69f2c4a0c782a1d54430749b4", "ci_runs": [34907915973, 34907990818]},
-    "goldens": {"merge": "6e4dbe70d04bc81e98bcc41653e1eb61e0ec38bb", "ci_runs": [34902006353, 34902178966]},
+    "pin": {"issue": 11, "merge": "5d5bfca9c2fe033cdf2cede81f32503bd8a66406", "ci_runs": [34900722736], "evidence_class": "Metadata/Static"},
+    "seams": {"issue": 12, "merge": "4d266a23a6ceede69f2c4a0c782a1d54430749b4", "ci_runs": [34907915973, 34907990818], "evidence_class": "Static/Metadata"},
+    "goldens": {"issue": 13, "merge": "6e4dbe70d04bc81e98bcc41653e1eb61e0ec38bb", "ci_runs": [34902006353, 34902178966], "evidence_class": "Runtime-subset + Metadata"},
 }
 EXPECTED_DISCREPANCIES = {"D0-DISC-001", "D0-DISC-002", "D0-DISC-003", "D0-DISC-004"}
 PIN_NAMES = ("hftbacktest", "titan", "qstack_runtime_recomposition", "qstack_chronforge_profile", "pstack")
@@ -124,14 +124,20 @@ def main() -> int:
 
     for child_name, expected in EXPECTED_ACCEPTANCE.items():
         actual = children.get(child_name, {})
-        if actual.get("merge") != expected["merge"]:
-            issues.append(f"{child_name} accepted merge identity drifted")
-        if actual.get("ci_runs") != expected["ci_runs"]:
-            issues.append(f"{child_name} accepted CI run set drifted")
+        for key in ("issue", "merge", "ci_runs", "evidence_class"):
+            if actual.get(key) != expected[key]:
+                issues.append(f"{child_name} accepted {key} drifted")
 
+    pin_dep = pin.get("dependency_mode", {})
     dep = joined.get("dependency_mode", {})
-    if dep.get("d0_d1") != pin.get("dependency_mode", {}).get("d0_d1"):
+    if dep.get("d0_d1") != pin_dep.get("d0_d1"):
         issues.append("joined D0/D1 dependency mode drifted from D0PinReceipt")
+    if dep.get("d2") != pin_dep.get("d2_selected_mode"):
+        issues.append("joined D2 dependency mechanism drifted from D0PinReceipt")
+    if dep.get("d2_repository") != pin_dep.get("d2_repository"):
+        issues.append("joined D2 repository drifted from D0PinReceipt")
+    if dep.get("d2_revision") != pin_dep.get("d2_revision") or dep.get("d2_revision") != EXPECTED_HBT:
+        issues.append("joined D2 exact revision drifted from D0PinReceipt/hftbacktest pin")
     if dep.get("floating_branch_or_tag") != "forbidden" or dep.get("reverse_dependency") != "forbidden":
         issues.append("joined dependency mode weakened exact/reverse-dependency policy")
     if any(dep.get(k) is not False for k in ("titan_runtime_dependency", "qstack_runtime_dependency", "pstack_runtime_dependency")):
@@ -173,6 +179,8 @@ def main() -> int:
     dmap = {d.get("id"): d for d in disc_entries}
     if dmap.get("D0-DISC-001", {}).get("acceptance", {}).get("ci_run") != 34900722736:
         issues.append("D0-DISC-001 acceptance evidence drifted")
+    if dmap.get("D0-DISC-002", {}).get("acceptance", {}).get("seam_merge") != EXPECTED_ACCEPTANCE["seams"]["merge"]:
+        issues.append("D0-DISC-002 acceptance evidence drifted")
     if dmap.get("D0-DISC-003", {}).get("acceptance", {}).get("strict_ci_run") != 34907990818:
         issues.append("D0-DISC-003 strict acceptance evidence drifted")
     if dmap.get("D0-DISC-004", {}).get("acceptance", {}).get("strict_ci_run") != 34902178966:
