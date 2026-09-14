@@ -4,7 +4,7 @@
 
 ChronForge SHALL maintain a machine-readable orchestration record for program #1, optional issues #6-#8, and runtime leaf/join issues #11-#29.
 
-Each record SHALL identify dependencies, OpenSpec binding, qstack composition, pstack base playbook/orch role, swarm shape, arena policy, interrogate gate, project verification levers/evidence class/falsifier, and produced/consumed handoff.
+Each record SHALL identify staged dependencies, OpenSpec binding, qstack composition, pstack base playbook/orch role, swarm shape, arena policy, interrogate gate, project verification levers/evidence class/falsifier, and produced/consumed handoff.
 
 #### Scenario: Agent resolves an issue before implementation
 
@@ -12,6 +12,38 @@ Each record SHALL identify dependencies, OpenSpec binding, qstack composition, p
 - **WHEN** its orchestration record is resolved
 - **THEN** the agent can determine whether the issue is BLOCKED or READY
 - **AND** can identify its exact intent, quant profile, generic engineering workflow, review gates and executable proof without reconstructing them from unrelated documents
+
+### Requirement: Issue Bodies Mirror The Authoritative Execution Record
+
+Every covered GitHub issue body SHALL contain a clearly delimited `Execution packet` section synchronized from its authoritative machine orchestration record.
+
+The execution packet SHALL include the matrix schema/record reference, staged dependencies, OpenSpec binding, qstack development composition, pstack playbook/orch role, swarm contract, arena policy, interrogate gate, verification levers/evidence/falsifier, and handoff receipt/consumer.
+
+The machine record SHALL remain authoritative. Divergence between the issue-body packet and its machine row SHALL be treated as orchestration `ISSUES` and corrected by regeneration rather than by creating two policy sources.
+
+#### Scenario: Agent opens a leaf issue directly
+
+- **GIVEN** a developer or agent opens #17 without first reading roadmap documents
+- **WHEN** the issue body is read
+- **THEN** the `Execution packet` identifies the D1 OpenSpec task, qstack QD-06/formal verification semantics, pstack Feature role, swarm slices, required arena/interrogate gates, executable proof surface, falsifier, and #19 handoff
+- **AND** the agent can then resolve the authoritative matrix row for machine validation
+
+### Requirement: Dependencies Distinguish Start Readiness From Verification Readiness
+
+Each orchestration record SHALL declare `dependencies.start_after[]` and `dependencies.verify_after[]`.
+
+`start_after` SHALL identify the evidence that must exist before material work may begin. `verify_after` SHALL identify the evidence that must exist before the issue may enter VERIFY/HANDOFF. `start_after` SHALL be a subset of `verify_after` unless a documented verifier rule justifies otherwise.
+
+A read-only investigation MAY begin before all `verify_after` dependencies exist when its `start_after` set is satisfied, but it SHALL NOT produce a final handoff until all `verify_after` evidence is present.
+
+#### Scenario: D0 seam inventory overlaps pin finalization
+
+- **GIVEN** #11 pin/provenance is still ACTIVE
+- **AND** #12 has no `start_after` blocker for read-only source inventory
+- **WHEN** #12 begins seam discovery
+- **THEN** its read-only swarm MAY run concurrently with #11
+- **BUT** #12 cannot VERIFY/HANDOFF its pin-resolved seam receipt until #11's `D0PinReceipt` is available
+- **AND** #14 remains blocked until #11, #12 and #13 receipts all exist
 
 ### Requirement: Material Apply Requires Accepted OpenSpec Intent
 
