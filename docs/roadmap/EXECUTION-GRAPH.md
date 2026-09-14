@@ -2,7 +2,7 @@
 
 This is the canonical development graph tying OpenSpec intent, qstack quant-development composition, pstack execution mechanics, ChronForge issues/PRs, project verification levers, and qorch research handoff together.
 
-Machine orchestration index: [`ISSUE-ORCHESTRATION.json`](ISSUE-ORCHESTRATION.json). The index includes one record for program #1, phase coordinators #3-#5, optional capabilities #6-#8, and runtime leaves/joins #11-#29.
+Machine orchestration index: [`ISSUE-ORCHESTRATION.json`](ISSUE-ORCHESTRATION.json). Schema v2 covers program #1, phase coordinators #2-#5, optional capabilities #6-#8, and runtime leaves/joins #11-#29.
 
 ## Layered ownership
 
@@ -47,11 +47,11 @@ Upstream `/orchestrate` remains an explicitly invoked Cursor workflow; ChronForg
 
 ## Recursive issue state machine
 
-Every issue record follows this state machine:
+Schema v2 distinguishes work-start readiness from proof/handoff readiness:
 
 ```text
 BLOCKED
-  | declared dependencies accepted
+  | dependencies.start_after satisfied
   v
 INTENT_READY
   | governing OpenSpec intent/tasks accepted on main
@@ -61,13 +61,14 @@ READY
   v
 ACTIVE
   | isolated issue/worker execution
+  | dependencies.verify_after may still be pending for staged investigation
   v
 SYNTHESIS          only when arena trigger fires
   v
 REVIEW             interrogate when required
   | unresolved Act on -> ACTIVE
   v
-VERIFY
+VERIFY             requires all verify_after evidence
   | ISSUES  -> ACTIVE
   | BLOCKED -> BLOCKED
   ` PASS    -> HANDOFF
@@ -76,20 +77,28 @@ VERIFY
               DONE
 ```
 
-For a join node, READY also requires every declared child handoff receipt. DONE requires independent cross-child verification. Closing child issues or merging their PRs is not sufficient evidence.
+`start_after` MUST be a subset of `verify_after`. A read-only issue may start before its final evidence dependencies arrive, but it cannot VERIFY or HANDOFF until `verify_after` is satisfied. For join nodes, `start_after == verify_after == all required child receipts`; closing child issues or merging their PRs is not sufficient evidence.
 
-## Per-issue execution protocol
+## Per-issue execution packet
 
-Every machine record declares the same eight concerns:
+Every covered issue has one authoritative machine row and one synchronized `Execution packet` view in its GitHub issue body. The packet contains:
 
-1. **Intent gate** — OpenSpec change and task binding.
-2. **Qstack composition** — `development` intent, exact QD profiles, operation skills, VerificationProfile and ChronForge ProjectProfile.
-3. **Pstack execution** — BasePlaybook and pstack orch role; generic workflow bodies are upstream-owned.
-4. **Swarm** — `none | partition | race | mixed`, independent slices and done predicate.
-5. **Arena** — `skip | conditional | required | required-if-selected`, trigger and synthesis policy.
-6. **Interrogate** — whether readonly adversarial review is required, its scope, and the `Act on` merge gate.
-7. **Lever verification** — exact project command(s), evidence class and smallest falsifier.
-8. **Handoff** — typed evidence receipt and the node that consumes it.
+1. **Staged dependencies** — `start_after[]` and `verify_after[]`.
+2. **Intent gate** — OpenSpec change and task binding.
+3. **Qstack composition** — `development` intent, exact QD profiles, operation skills, VerificationProfile and ChronForge ProjectProfile.
+4. **Pstack execution** — BasePlaybook and pstack orch role; generic workflow bodies are upstream-owned.
+5. **Swarm** — `none | partition | race | mixed`, independent slices and done predicate.
+6. **Arena** — `skip | conditional | required | required-if-selected`, trigger and synthesis policy.
+7. **Interrogate** — whether readonly adversarial review is required, its scope, and the `Act on` merge gate.
+8. **Lever verification** — exact project command(s), evidence class, current proof status and smallest falsifier.
+9. **Handoff** — typed evidence receipt and the node that consumes it.
+
+The machine row is the source of truth. Generate a synchronized view with:
+
+```bash
+python3 tools/verify/render_issue_packet.py --issue 17
+python3 tools/verify/render_issue_packet.py --check
+```
 
 ### Swarm rule
 
@@ -113,7 +122,7 @@ Interrogate is mandatory for every join and for leaves changing public contracts
 
 ### Lever rule
 
-A completion claim needs the smallest rerunnable ChronForge-owned command capable of falsifying it. Narrative review, OpenSpec validation or compilation cannot substitute for Runtime/PAPER/LIVE evidence. Missing executable proof means `BLOCKED`.
+A completion claim needs the smallest rerunnable ChronForge-owned command capable of falsifying it. Narrative review, OpenSpec validation or compilation cannot substitute for Runtime/PAPER/LIVE evidence. Missing executable proof means verification remains `BLOCKED`, even when investigation work itself is READY/ACTIVE.
 
 Current project verifier:
 
@@ -135,15 +144,16 @@ bash tools/verify/verify.sh d3   # currently BLOCKED
   |
   +-> O0 qstack binding -------------------------------- COMPLETE
   |
-  +-> D0 reconciliation -------------------------------- CURRENT FRONTIER
+  +-> #2 D0 phase coordinator -------------------------- ACTIVE / REOPENED
   |     #11 pin/provenance ------------------------------ READY
-  |     #12 seam inventory ------------------------------ after #11 final pin
-  |     #13 executable goldens -------------------------- after #11 final pin
-  |     `-> #14 D0.J ------------------------------------ BLOCKED on child receipts
+  |     #12 seam inventory ------------------------------ READY for read-only work
+  |     |     verify_after: #11
+  |     #13 executable goldens -------------------------- BLOCKED; start_after #11
+  |     `-> #14 D0.J ------------------------------------ BLOCKED on #11/#12/#13 receipts
   |             |
-  |             `-> D0BaselineReceipt unlocks D1 intent/apply
+  |             `-> D0BaselineReceipt closes #2 and unlocks D1 intent/apply
   |
-  +-> D1 engine contracts ------------------------------ BLOCKED
+  +-> #3 D1 engine contracts --------------------------- BLOCKED
   |     OpenSpec: chronforge-d1-engine-contracts
   |     #15 IDs/units/model identities -----------------+
   |     #16 EventPhase/EventKey ------------------------+
@@ -152,7 +162,7 @@ bash tools/verify/verify.sh d3   # currently BLOCKED
   |                                                     |
   |                               D1EngineContractReceipt
   +-----------------------------------------------------v
-  +-> D2 hftbacktest integration ----------------------- BLOCKED
+  +-> #4 D2 hftbacktest integration -------------------- BLOCKED
   |     OpenSpec: chronforge-d2-hftbacktest-integration
   |     #20 dependency/market normalization ------------+
   |     #21 command -> kernel processors ---------------+
@@ -161,7 +171,7 @@ bash tools/verify/verify.sh d3   # currently BLOCKED
   |                                                     |
   |                                  D2IntegrationReceipt
   +-----------------------------------------------------v
-  +-> D3 native strategy runtime ----------------------- BLOCKED
+  +-> #5 D3 native strategy runtime -------------------- BLOCKED
   |     OpenSpec: chronforge-d3-native-runtime
   |     #25 RuntimeEvent/Source ------------------------+
   |     #26 Strategy/Context ---------------------------+
@@ -179,17 +189,26 @@ bash tools/verify/verify.sh d3   # currently BLOCKED
 
 Mandatory MVP remains `O0 -> D0 -> D1 -> D2 -> D3`.
 
-## D0 reconciliation plan
+## D0 staged execution plan
 
-D0 material characterization already landed in PR #32 and its OpenSpec change was archived. H2 does not invent a second D0 intent cycle. Instead:
+D0 material characterization already landed in PR #32 and its OpenSpec change was archived. H2 does not invent a second D0 intent cycle. It reconciles that evidence into the recursive graph:
 
 ```text
-#11 swarm provenance/pins ---------------------------+
-#12 swarm source seams ------------------------------+--> #14 interrogate + D0 join lever
-#13 swarm golden families ---------------------------+
+                 +--> #12 read-only seam swarm ---------+
+#11 pin swarm ---+                                        |
+                 +--> #13 executable golden swarm -------+--> #14 interrogate + D0 join lever
+                     #12 VERIFY also waits on #11 -------+
 ```
 
-#11 and read-only parts of #12 may run in parallel; #12 final pin references and #13 execution use #11. Reuse PR #32 evidence and only add missing issue-specific receipts/levers. #14 consumes those receipts and independently checks ownership, pin, baseline and evidence-class consistency.
+Operationally:
+
+- #11 and the read-only discovery slices of #12 may execute in parallel.
+- #12 cannot verify or emit `D0SeamInventoryReceipt` until #11 fixes the final revisions.
+- #13 cannot start the executable baseline/golden run until #11 emits `D0PinReceipt`.
+- #14 cannot start until all three child receipts exist, and then independently reruns cross-child ownership/pin/evidence invariants plus interrogate.
+- #2 is the phase coordinator and remains open until #14 is accepted. Historical PR auto-close is not a phase-completion signal.
+
+Reuse PR #32 evidence and only add missing issue-specific receipts/levers.
 
 ## D1-D3 intent gates
 
@@ -197,16 +216,19 @@ After each predecessor join is accepted, the next phase first lands one coherent
 
 ```text
 #14 PASS
+ -> close #2 / mark #3 INTENT_READY
  -> OpenSpec chronforge-d1-engine-contracts intent/spec/design/tasks
- -> #15/#16/#17/#18 workers
+ -> #15/#16/#17/#18 workers under their staged dependencies
  -> #19 interrogate + cross-child formal/property lever
 
 #19 PASS
+ -> close #3 / mark #4 INTENT_READY
  -> OpenSpec chronforge-d2-hftbacktest-integration
  -> #20/#21/#22/#23 workers
  -> #24 interrogate + integrated Runtime lever
 
 #24 PASS
+ -> close #4 / mark #5 INTENT_READY
  -> OpenSpec chronforge-d3-native-runtime
  -> #25/#26/#27/#28 workers
  -> #29 interrogate + integrated 100-run Runtime lever
@@ -217,10 +239,12 @@ Phase-level OpenSpec changes map leaf tasks to GitHub issues; do not create one 
 ## Evidence gates
 
 ```text
+Start gate    = dependencies.start_after satisfied
 Intent gate   = accepted OpenSpec artifacts on main
-Leaf gate     = issue-specific lever + handoff receipt
+Verify gate   = dependencies.verify_after satisfied + issue-specific lever
 Arena gate    = synthesized candidate verified when trigger fired
 Review gate   = interrogate required findings triaged; Act on resolved
+Handoff gate  = typed receipt emitted at earned evidence class
 Join gate     = all child receipts + independent cross-child lever
 Merge gate    = project CI / verify-chronforge green at earned evidence class
 Archive gate  = implementation merged, strict OpenSpec validation, living spec read-back
