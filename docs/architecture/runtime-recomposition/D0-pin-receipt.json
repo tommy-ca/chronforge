@@ -1,0 +1,20 @@
+{
+  "schema": "chronforge.D0PinReceipt/v1",
+  "issue": 11,
+  "internal_join_issue": 68,
+  "implementation_issue": 71,
+  "assembled_at_utc": "2026-09-14T21:45:29Z",
+  "evidence_class": "Metadata/Static",
+  "pins": {
+    "hftbacktest": {"repository":"tommy-ca/hftbacktest","revision":"058cfefd9740b6857bb875bad4d5e6547a88379a","role":"external-microstructure-kernel","upstream":"nkaz001/hftbacktest","license":"MIT","license_path":"LICENSE","copied_into_chronforge":false},
+    "titan": {"repository":"dominolu/titan","revision":"3c56818f6e412f21bc8b305ff3dc0f6dc1aa7024","role":"reference-evidence-only","license":"MIT","license_path":"LICENSE","runtime_dependency":false,"imported":false},
+    "qstack_runtime_recomposition": {"repository":"tommy-ca/qstack","revision":"6d124b93b6008851c1fc48aaef5ef6a20d6535b6","role":"development-domain-semantics","license":"MIT","license_path":"LICENSE","runtime_dependency":false},
+    "qstack_chronforge_profile": {"repository":"tommy-ca/qstack","revision":"cf4e62f4ef98fe378393fa3adff8449ff9457024","role":"development-project-profile","runtime_dependency":false},
+    "pstack": {"repository":"cursor/plugins","revision":"be432a96ed36e48d05f44bf375864355f62263f9","subtree":"pstack/","role":"generic-development-orchestration-substrate","license":"MIT","license_path":"pstack/LICENSE","runtime_dependency":false}
+  },
+  "dependency_mode": {"d0_d1":"detached-checkout-at-exact-revision","d2_selected_mode":"cargo-git-exact-rev","d2_repository":"https://github.com/tommy-ca/hftbacktest","d2_revision":"058cfefd9740b6857bb875bad4d5e6547a88379a","local_path_override":"allowed only when checkout HEAD equals d2_revision","floating_branch_or_tag":"forbidden","d0_hard_dependency_present":false,"dependency_direction":"chronforge -> hftbacktest only","reverse_dependency":"forbidden"},
+  "drift_policy": {"pin_change_invalidates_receipt":true,"requires_explicit_drift_review":true,"downstream_receipts_invalidated":["D0SeamInventoryReceipt","D0GoldenReceipt","D0BaselineReceipt"],"silent_substitution":"forbidden"},
+  "swarm": {"children":[58,59,60,61],"join":68,"result":"synthesized"},
+  "verification": {"commands":["python3 tools/verify/verify_d0_pin_receipt.py","bash tools/verify/verify.sh d0"],"status":"accepted-via-pr-73-ci-34900722736","runtime_or_live_claim":false},
+  "must_not": ["vendor or import Titan source","vendor hftbacktest into ChronForge","use a floating hftbacktest branch or tag as the reproducibility contract","make qstack or pstack a runtime dependency","reverse the dependency direction from hftbacktest to ChronForge","claim Runtime/PAPER/LIVE evidence from this Metadata/Static receipt"]
+}
