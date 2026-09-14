@@ -24,6 +24,6 @@
 - [x] 4.1 Verify no pstack/qstack/OpenCode/Superpowers workflow copy was introduced. Verified by PR #38 diff: only repo-local composition instructions/config/docs/CI were added.
 - [x] 4.2 Verify runtime crates contain no OpenSpec/qstack/pstack/qorch dependency. GitHub Actions `Control-plane dependency guard` passed on PR #38.
 - [x] 4.3 Run strict OpenSpec validation before implementation merge/archive. GitHub Actions `Strict OpenSpec validation` passed on PR #38 using `@fission-ai/openspec@1.13.0`.
-- [ ] 4.4 Merge implementation before archiving this change.
-- [ ] 4.5 Archive the change and read back `openspec/specs/chronforge-development-flow/spec.md`.
+- [x] 4.4 Merge implementation before archiving this change. PR #38 merged as `e3559e07c68371eec87682d2243d64b3328ad65b`.
+- [x] 4.5 Prepare archive and living `openspec/specs/chronforge-development-flow/spec.md`; final read-back is performed after archive merge by #36.
 - [ ] 4.6 Close #33 only after living-spec read-back and issue/PR/merge SHAs are recorded.
