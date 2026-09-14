@@ -49,9 +49,11 @@ case "$PROFILE" in
     printf '%s\n' '{"schema":"chronforge.verification.profile-run/v1","profile":"control-plane","verdict":"PASS","evidence_class":"Static/Metadata/CI"}'
     ;;
   d0)
-    run_required d0 d0-receipt-validation Metadata \
+    run_required d0 d0-pin-receipt Metadata/Static \
+      python3 "$ROOT/tools/verify/verify_d0_pin_receipt.py"
+    run_required d0 d0-baseline-receipt Metadata \
       python3 "$ROOT/tools/verify/verify_d0_receipt.py"
-    printf '%s\n' '{"schema":"chronforge.verification.profile-run/v1","profile":"d0","verdict":"PASS","evidence_class":"Metadata","limitations":["Receipt validation does not rerun external hftbacktest Runtime evidence and does not accept D0.J."]}'
+    printf '%s\n' '{"schema":"chronforge.verification.profile-run/v1","profile":"d0","verdict":"PASS","evidence_class":"Metadata/Static","limitations":["D0 pin/baseline receipt validation does not rerun external hftbacktest Runtime evidence and does not accept D0.J."]}'
     ;;
   d1|d2|d3|d4|d5|d6)
     python3 - "$ROOT/tools/verify/profiles.json" "$PROFILE" <<'PY'
