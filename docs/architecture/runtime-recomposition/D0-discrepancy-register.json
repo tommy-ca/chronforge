@@ -1,0 +1,68 @@
+{
+  "schema": "chronforge.D0DiscrepancyRegister/v1",
+  "issue": 14,
+  "audit_children": [86, 87, 88, 89],
+  "unresolved_blocking_count": 0,
+  "blocking_contradictions": [],
+  "discrepancies": [
+    {
+      "id": "D0-DISC-001",
+      "class": "resolved-metadata",
+      "severity": "nonblocking",
+      "artifact": "docs/architecture/runtime-recomposition/D0-pin-receipt.json",
+      "observation": "verification.status records creation-time pending-ci-at-file-creation",
+      "resolution": "resolved-by-later-acceptance-evidence",
+      "acceptance": {"merge": "5d5bfca9c2fe033cdf2cede81f32503bd8a66406", "ci_run": 34900722736},
+      "rewrite_child": false
+    },
+    {
+      "id": "D0-DISC-002",
+      "class": "resolved-metadata",
+      "severity": "nonblocking",
+      "artifact": "docs/architecture/runtime-recomposition/D0-seam-inventory.json",
+      "observation": "verification_state records creation-time BLOCKED-until-D0PinReceipt-accepted",
+      "resolution": "resolved-by-later-acceptance-evidence",
+      "acceptance": {"parent_pin_merge": "5d5bfca9c2fe033cdf2cede81f32503bd8a66406", "seam_merge": "4d266a23a6ceede69f2c4a0c782a1d54430749b4"},
+      "rewrite_child": false
+    },
+    {
+      "id": "D0-DISC-003",
+      "class": "resolved-metadata",
+      "severity": "nonblocking",
+      "artifact": "docs/architecture/runtime-recomposition/D0-seam-receipt.json",
+      "observation": "receipt stamps first proof run while a later strict final-head run validated the stamped receipt",
+      "resolution": "resolved-by-later-acceptance-evidence",
+      "acceptance": {"first_ci_run": 34907915973, "strict_ci_run": 34907990818, "merge": "4d266a23a6ceede69f2c4a0c782a1d54430749b4"},
+      "rewrite_child": false
+    },
+    {
+      "id": "D0-DISC-004",
+      "class": "resolved-metadata",
+      "severity": "nonblocking",
+      "artifact": "docs/architecture/runtime-recomposition/D0-golden-receipt.json",
+      "observation": "receipt stamps first external proof run while a later strict final-head run validated the stamped receipt",
+      "resolution": "resolved-by-later-acceptance-evidence",
+      "acceptance": {"first_runtime_ci_run": 34902006353, "strict_ci_run": 34902178966, "merge": "6e4dbe70d04bc81e98bcc41653e1eb61e0ec38bb"},
+      "rewrite_child": false
+    }
+  ],
+  "accepted_limitations": [
+    "Python/PyO3 runtime is not proven by D0",
+    "default live/iceoryx feature set is not proven by D0",
+    "PAPER and LIVE readiness are not proven by D0",
+    "D2 canonical adapter behavior is not implied by kernel goldens",
+    "granular L2/L3, lifecycle and partial-fill fixture gaps remain explicit D2 obligations",
+    "byte-preserved v1 historical artifacts retain creation-time embedded path/link semantics after relocation"
+  ],
+  "deferred_obligations": [
+    {"phase": "D1", "obligation": "define canonical IDs/units/ordering/execution/account/receipt contracts without duplicating kernel truth"},
+    {"phase": "D2", "obligation": "adapt canonical contracts to pinned hftbacktest seams and preserve golden semantics"},
+    {"phase": "D3", "obligation": "prove native strategy runtime/replay behavior against accepted D1/D2 contracts"}
+  ],
+  "ownership": {
+    "hftbacktest": ["depth state", "queue semantics/state", "exchange matching/fills", "latency transport", "fee calculation"],
+    "chronforge": ["canonical IDs/units", "EventKey/EventPhase scheduling contract", "canonical commands/reports", "runtime/result/determinism receipts"],
+    "duplicate_matching_authority": false,
+    "reverse_dependency": false
+  }
+}

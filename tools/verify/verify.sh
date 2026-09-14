@@ -59,9 +59,11 @@ case "$PROFILE" in
       python3 "$ROOT/tools/verify/verify_d0_seam_receipt.py"
     run_required d0 d0-golden-receipt Runtime-subset/Metadata \
       python3 "$ROOT/tools/verify/verify_d0_golden_receipt.py"
-    run_required d0 d0-baseline-receipt Metadata \
-      python3 "$ROOT/tools/verify/verify_d0_receipt.py"
-    printf '%s\n' '{"schema":"chronforge.verification.profile-run/v1","profile":"d0","verdict":"PASS","evidence_class":"Runtime-subset/Metadata","limitations":["Pin/seam/golden receipts are child evidence only; this profile does not accept D0.J."]}'
+    run_required d0 d0-historical-characterization Static/Metadata \
+      python3 "$ROOT/tools/verify/verify_d0_characterization_receipt.py"
+    run_required d0 d0-join-strict Runtime-subset/Static/Metadata \
+      python3 "$ROOT/tools/verify/verify_d0_join.py"
+    printf '%s\n' '{"schema":"chronforge.verification.profile-run/v1","profile":"d0","verdict":"PASS","evidence_class":"Runtime-subset/Static/Metadata","limitations":["Strict D0 joined receipt is internally accepted. Authoritative D1 issue-state activation still waits for #92/#14 closure and the graph-state transition PR."]}'
     ;;
   d1|d2|d3|d4|d5|d6)
     python3 - "$ROOT/tools/verify/profiles.json" "$PROFILE" <<'PY'

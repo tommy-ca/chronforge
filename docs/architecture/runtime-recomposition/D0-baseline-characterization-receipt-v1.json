@@ -1,0 +1,82 @@
+{
+  "schema": "chronforge.D0BaselineReceipt/v1",
+  "feature": "chronforge-d0-baseline",
+  "evidence_class": "Static/Metadata",
+  "live_pass": false,
+  "soft_ne_green": true,
+  "timeout_ne_pass": true,
+  "hftbacktest": {
+    "repo": "https://github.com/tommy-ca/hftbacktest",
+    "full_name": "tommy-ca/hftbacktest",
+    "sha": "058cfefd9740b6857bb875bad4d5e6547a88379a",
+    "fork": true,
+    "upstream": {
+      "full_name": "nkaz001/hftbacktest",
+      "html_url": "https://github.com/nkaz001/hftbacktest"
+    },
+    "default_branch": "master",
+    "characterized_via": ["gh api", "shallow clone /workspace/verify/hftbacktest-d0-pin"]
+  },
+  "chronforge": {
+    "repo": "https://github.com/tommy-ca/chronforge",
+    "tip_base_sha": "e74dd7ea0dec315b84331fbc0bb941f3a2f9390f",
+    "propose_tip_floor_sha": "d8cb90b735086f126a4ca2262de3371f7508c1bc",
+    "propose_pr": 30,
+    "issue": 2
+  },
+  "titan_evidence_only": {
+    "repo": "dominolu/titan",
+    "sha": "3c56818f6e412f21bc8b305ff3dc0f6dc1aa7024",
+    "imported": false
+  },
+  "content_hash": {
+    "algo": "sha256",
+    "of": "pin + ownership_map + golden_inventory Soft≠green",
+    "value": "80f52df5bccb3330b6b79ee7a57c967b7a3e0703dcfe2285c208d706c024b306"
+  },
+  "ownership_map_path": "docs/architecture/runtime-recomposition/D0-baseline.md",
+  "golden_inventory": {
+    "commands": [
+      "cargo check -p hftbacktest --no-default-features --features backtest",
+      "cargo test -p hftbacktest --no-default-features --features backtest --lib",
+      "cargo test -p hftbacktest --no-default-features --features backtest --lib binary_fee"
+    ],
+    "fixture_sha256": {
+      "py-hftbacktest/tests/test_polymarket.py": "7ebbbd6baa407f1fad84da5a37ff246246689723db9414c6408281acbfe18b37",
+      "py-hftbacktest/hftbacktest/data/utils/polymarket.py": "b5cc1fac9a9be40d1c39a444d9d8fd975387f6ae003c917fb457f4213b0d3e3e",
+      "hftbacktest/src/backtest/models/fee.rs": "c6311a0c9f432e8f922702746d7481c6da0418a7c2c96ce929b58206b62a7177",
+      "examples/polymarket/smoke_converter.py": "32a57155e776c3ece89f81c20d78a203650f2e2200abab7f3b77476aead841e8"
+    }
+  },
+  "levers": {
+    "A-UP-001": {
+      "cargo_check_backtest_exit": 0,
+      "cargo_test_lib_binary_fee_exit": 0,
+      "cargo_test_lib_exit": 0,
+      "cargo_test_lib_passed": 26,
+      "features": "backtest (no-default; live/iceoryx not exercised)",
+      "verdict": "Soft≠green Runtime subset — not LIVE_PASS"
+    },
+    "A-UP-002": {
+      "overlay_inventory_exit": 0,
+      "migration": false,
+      "python_unittest_runtime_pass": false,
+      "verdict": "Soft≠green Metadata — goldens unchanged"
+    },
+    "A-UP-003": {
+      "tree_grep_exit": 0,
+      "titan_dirs_found": 0,
+      "embedded_hftbacktest_src_found": 0,
+      "cargo_hard_dep": false,
+      "verdict": "Soft≠green Static"
+    }
+  },
+  "must_not": [
+    "no Titan import",
+    "no matching-engine replacement",
+    "no qstack/qorch/pstack runtime in kernel",
+    "no invent LIVE_PASS",
+    "no hbt-engine→hftbacktest hard wire yet Soft≠green"
+  ],
+  "d1_unlock_note": "Receipt Soft≠green unlocks D1 consumption of pin/map; D1 graph still BLOCKED on accepted #14 join Soft≠green"
+}

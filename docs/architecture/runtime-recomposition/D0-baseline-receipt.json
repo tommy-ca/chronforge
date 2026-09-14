@@ -1,82 +1,73 @@
 {
-  "schema": "chronforge.D0BaselineReceipt/v1",
-  "feature": "chronforge-d0-baseline",
-  "evidence_class": "Static/Metadata",
+  "schema": "chronforge.D0BaselineReceipt/v2",
+  "issue": 14,
+  "phase_issue": 2,
+  "implementation_issue": 90,
+  "chronforge_source": {
+    "candidate_base_revision": "8fb4872e8dcb5b743489cb826037e2b01638bcf1",
+    "interrogate_reviewed_revision": "994a9c2881a37ec30e987fa9e95540acc9681b13",
+    "accepted_proof_revision": "d7f8cc0d95db9d55103793d70b91ed66dfc26353"
+  },
+  "evidence_class": "Composite: Runtime-subset + Static/Metadata",
   "live_pass": false,
-  "soft_ne_green": true,
-  "timeout_ne_pass": true,
-  "hftbacktest": {
-    "repo": "https://github.com/tommy-ca/hftbacktest",
-    "full_name": "tommy-ca/hftbacktest",
-    "sha": "058cfefd9740b6857bb875bad4d5e6547a88379a",
-    "fork": true,
-    "upstream": {
-      "full_name": "nkaz001/hftbacktest",
-      "html_url": "https://github.com/nkaz001/hftbacktest"
-    },
-    "default_branch": "master",
-    "characterized_via": ["gh api", "shallow clone /workspace/verify/hftbacktest-d0-pin"]
+  "paper_pass": false,
+  "pins": {
+    "hftbacktest": {"revision":"058cfefd9740b6857bb875bad4d5e6547a88379a","role":"external-microstructure-kernel","upstream":"nkaz001/hftbacktest"},
+    "titan": {"revision":"3c56818f6e412f21bc8b305ff3dc0f6dc1aa7024","role":"reference-evidence-only","runtime_dependency":false},
+    "qstack_runtime_recomposition": {"revision":"6d124b93b6008851c1fc48aaef5ef6a20d6535b6","role":"development-domain-semantics","runtime_dependency":false},
+    "qstack_chronforge_profile": {"revision":"cf4e62f4ef98fe378393fa3adff8449ff9457024","role":"development-project-profile","runtime_dependency":false},
+    "pstack": {"revision":"be432a96ed36e48d05f44bf375864355f62263f9","role":"generic-development-orchestration-substrate","subtree":"pstack/","runtime_dependency":false}
   },
-  "chronforge": {
-    "repo": "https://github.com/tommy-ca/chronforge",
-    "tip_base_sha": "e74dd7ea0dec315b84331fbc0bb941f3a2f9390f",
-    "propose_tip_floor_sha": "d8cb90b735086f126a4ca2262de3371f7508c1bc",
-    "propose_pr": 30,
-    "issue": 2
+  "children": {
+    "pin": {"issue":11,"path":"docs/architecture/runtime-recomposition/D0-pin-receipt.json","git_blob_sha":"e6c54a4b34fd0aad6e86d750dd5281ac7e96bcf4","merge":"5d5bfca9c2fe033cdf2cede81f32503bd8a66406","ci_runs":[34900722736],"evidence_class":"Metadata/Static"},
+    "seams": {"issue":12,"path":"docs/architecture/runtime-recomposition/D0-seam-receipt.json","git_blob_sha":"09edcda3d3c87ccb9b40465cd1d619f688c766d8","inventory_path":"docs/architecture/runtime-recomposition/D0-seam-inventory.json","inventory_git_blob_sha":"fb1bd95e8bfb914a15cee25587598da5a4d44313","merge":"4d266a23a6ceede69f2c4a0c782a1d54430749b4","ci_runs":[34907915973,34907990818],"evidence_class":"Static/Metadata"},
+    "goldens": {"issue":13,"path":"docs/architecture/runtime-recomposition/D0-golden-receipt.json","git_blob_sha":"1ef4cb20f5f42c6dc07370f64b775f1025823364","merge":"6e4dbe70d04bc81e98bcc41653e1eb61e0ec38bb","ci_runs":[34902006353,34902178966],"evidence_class":"Runtime-subset + Metadata"}
   },
-  "titan_evidence_only": {
-    "repo": "dominolu/titan",
-    "sha": "3c56818f6e412f21bc8b305ff3dc0f6dc1aa7024",
-    "imported": false
+  "dependency_mode": {
+    "d0_d1":"detached-checkout-at-exact-revision","d2":"cargo-git-exact-rev","d2_repository":"https://github.com/tommy-ca/hftbacktest","d2_revision":"058cfefd9740b6857bb875bad4d5e6547a88379a","floating_branch_or_tag":"forbidden","dependency_direction":"chronforge -> hftbacktest only","reverse_dependency":"forbidden","titan_runtime_dependency":false,"qstack_runtime_dependency":false,"pstack_runtime_dependency":false
   },
-  "content_hash": {
-    "algo": "sha256",
-    "of": "pin + ownership_map + golden_inventory Soft≠green",
-    "value": "80f52df5bccb3330b6b79ee7a57c967b7a3e0703dcfe2285c208d706c024b306"
+  "ownership": {
+    "hftbacktest":["depth state","queue semantics/state","matching/fills","latency transport","fee calculation"],
+    "chronforge":["canonical IDs/units","EventKey/EventPhase","canonical execution schemas","runtime/result/determinism receipts"],
+    "second_matching_engine":false,"one_authority_per_state":true
   },
-  "ownership_map_path": "docs/architecture/runtime-recomposition/D0-baseline.md",
-  "golden_inventory": {
-    "commands": [
-      "cargo check -p hftbacktest --no-default-features --features backtest",
-      "cargo test -p hftbacktest --no-default-features --features backtest --lib",
-      "cargo test -p hftbacktest --no-default-features --features backtest --lib binary_fee"
-    ],
-    "fixture_sha256": {
-      "py-hftbacktest/tests/test_polymarket.py": "7ebbbd6baa407f1fad84da5a37ff246246689723db9414c6408281acbfe18b37",
-      "py-hftbacktest/hftbacktest/data/utils/polymarket.py": "b5cc1fac9a9be40d1c39a444d9d8fd975387f6ae003c917fb457f4213b0d3e3e",
-      "hftbacktest/src/backtest/models/fee.rs": "c6311a0c9f432e8f922702746d7481c6da0418a7c2c96ce929b58206b62a7177",
-      "examples/polymarket/smoke_converter.py": "32a57155e776c3ece89f81c20d78a203650f2e2200abab7f3b77476aead841e8"
-    }
+  "acceptance": {
+    "A-UP-001":{"status":"PASS","evidence_class":"Runtime-subset","source":"D0GoldenReceipt exact-pin Rust backtest corpus"},
+    "A-UP-002":{"status":"PASS-scoped","evidence_class":"Runtime-subset + Metadata","source":"targeted BinaryFeeModel tests + pinned Polymarket artifact hashes","limitation":"Python/PyO3 runtime not executed"},
+    "A-UP-003":{"status":"PASS","evidence_class":"Static/Metadata","source":"D0PinReceipt + D0SeamInventoryReceipt","claim":"additive ChronForge architecture; no Titan tree or second matching engine"}
   },
-  "levers": {
-    "A-UP-001": {
-      "cargo_check_backtest_exit": 0,
-      "cargo_test_lib_binary_fee_exit": 0,
-      "cargo_test_lib_exit": 0,
-      "cargo_test_lib_passed": 26,
-      "features": "backtest (no-default; live/iceoryx not exercised)",
-      "verdict": "Soft≠green Runtime subset — not LIVE_PASS"
-    },
-    "A-UP-002": {
-      "overlay_inventory_exit": 0,
-      "migration": false,
-      "python_unittest_runtime_pass": false,
-      "verdict": "Soft≠green Metadata — goldens unchanged"
-    },
-    "A-UP-003": {
-      "tree_grep_exit": 0,
-      "titan_dirs_found": 0,
-      "embedded_hftbacktest_src_found": 0,
-      "cargo_hard_dep": false,
-      "verdict": "Soft≠green Static"
-    }
-  },
-  "must_not": [
-    "no Titan import",
-    "no matching-engine replacement",
-    "no qstack/qorch/pstack runtime in kernel",
-    "no invent LIVE_PASS",
-    "no hbt-engine→hftbacktest hard wire yet Soft≠green"
+  "discrepancy_register": {"path":"docs/architecture/runtime-recomposition/D0-discrepancy-register.json","unresolved_blocking_count":0,"resolved_metadata_count":4},
+  "accepted_limitations": [
+    "Python/PyO3 runtime is not proven",
+    "default live/iceoryx is not proven",
+    "PAPER/LIVE readiness is not proven",
+    "D2 adapter behavior is not implied by kernel goldens",
+    "granular lifecycle/partial-fill coverage gaps remain D2 obligations",
+    "historical v1 blobs are byte-preserved under new filenames; embedded creation-time path/link strings retain their original context"
   ],
-  "d1_unlock_note": "Receipt Soft≠green unlocks D1 consumption of pin/map; D1 graph still BLOCKED on accepted #14 join Soft≠green"
+  "historical_characterization": {
+    "receipt":"docs/architecture/runtime-recomposition/D0-baseline-characterization-receipt-v1.json","receipt_git_blob_sha":"11991356daed7a2c6913982bb64882817ed55084","document":"docs/architecture/runtime-recomposition/D0-baseline-characterization-v1.md","document_git_blob_sha":"d19695acef4f8d59b576233d807b3b04e9998b37","preserved_unchanged":true,"embedded_paths_are_historical":true
+  },
+  "interrogate": {
+    "issue":91,"status":"PASS","receipt":"docs/architecture/runtime-recomposition/D0-join-interrogate-receipt.json","reviewed_candidate_head":"994a9c2881a37ec30e987fa9e95540acc9681b13","candidate_ci_run":34909053587,"unresolved_blocking_findings":0
+  },
+  "verification": {
+    "candidate_lever":"python3 tools/verify/verify_d0_join.py --candidate",
+    "prestamp_lever":"python3 tools/verify/verify_d0_join.py --prestamp",
+    "strict_lever":"python3 tools/verify/verify_d0_join.py",
+    "profile":"bash tools/verify/verify.sh d0",
+    "status":"ACCEPTED_CI",
+    "workflow_run":34909153517,
+    "workflow_head_sha":"d7f8cc0d95db9d55103793d70b91ed66dfc26353",
+    "stamp_requires_strict_rerun":true
+  },
+  "drift_policy": {"any_child_pin_or_blob_change_invalidates_receipt":true,"requires_explicit_d0_drift_review":true,"silent_substitution":"forbidden"},
+  "d1_unlock": true,
+  "must_not": [
+    "rewrite child receipts to erase creation-time metadata",
+    "promote Runtime-subset to PAPER or LIVE",
+    "make Titan/qstack/pstack/qorch runtime dependencies",
+    "introduce a second matching engine or duplicate state authority",
+    "activate D1 in the authoritative graph before #92 strict stamped-head validation and #14 acceptance"
+  ]
 }
