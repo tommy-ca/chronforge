@@ -1,4 +1,35 @@
 schema: intent-driven
+
 context: |
-  Soft≠green honesty. Timeout≠PASS. No invent LIVE_PASS.
-  ChronForge: deterministic event-time trading runtime; hftbacktest kernel external.
+  Project: ChronForge, a deterministic event-time trading runtime implemented in Rust.
+  External microstructure kernel: tommy-ca/hftbacktest, pinned by the active/project baseline receipt.
+  Quant-development composition: tommy-ca/qstack ChronForge ProjectProfile and applicable QD capability/verification profiles.
+  Generic engineering workflow/orchestration substrate: upstream cursor/plugins pstack via /poteto-mode and pstack orch mechanics.
+  Quant-research orchestration: qorch only after immutable SoftwareArtifactRef / RunReceipt / DeterminismReceipt handoff.
+  Project implementation state lives in tommy-ca/chronforge issues, branches, PRs, tests, and receipts.
+  Runtime code must not depend on OpenSpec, qstack, pstack, qorch, LLMs, MCP, or research orchestration.
+  Evidence honesty: Static/Metadata/formal/Runtime/PAPER/LIVE are distinct. Timeout, unavailable, blocked, skipped, or soft checks are not PASS.
+  Design laws: deterministic semantics first; one authoritative state owner; bounded hot paths when live; preserve external hftbacktest kernel semantics unless an explicit discrepancy ADR/spec says otherwise.
+
+rules:
+  proposal:
+    - Must identify the ChronForge parent/leaf issue or explain why the change is not issue-backed.
+    - Must classify whether the change is material behaviour/architecture/runtime work or read-only/non-material work.
+    - Must name the qstack ChronForge ProjectProfile baseline and expected QD capability/verification profiles when applicable.
+    - Must state the intended evidence class; specification/config evidence must not be described as Runtime/PAPER/LIVE proof.
+  specs:
+    - Requirements must express observable domain behaviour and use SHALL/MUST for normative contracts.
+    - Every requirement must include at least one four-hash Scenario with WHEN/THEN behaviour.
+    - Deterministic-runtime specs must state relevant ordering, state-authority, replay, execution, unit, or safety invariants rather than implementation-only details.
+  design:
+    - Must identify dependency direction, state ownership, and synchronous hot-path boundaries for runtime-affecting changes.
+    - Must explicitly prefer reuse of upstream pstack generic workflow and qstack quant-domain contracts over local workflow duplication.
+    - Must state whether hftbacktest behaviour is adopted, adapted, composed, or intentionally changed.
+    - Cross-phase designs must include the leaf-work -> join-gate execution graph and parent receipt dependencies.
+  adr:
+    - Must review repository-level adr/ records and use a new immutable ADR for durable architectural changes instead of editing accepted ADRs.
+  tasks:
+    - Every implementation task must be small, verifiable, and map to a ChronForge issue/child issue or explicit PR work item.
+    - Tasks must name applicable acceptance IDs and verification commands/evidence where known.
+    - Material changes must include strict OpenSpec validation before archive.
+    - Implementation merge must precede OpenSpec archive.
