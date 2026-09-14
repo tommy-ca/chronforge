@@ -46,16 +46,20 @@ case "$PROFILE" in
       python3 "$ROOT/tools/verify/render_issue_packet.py" --check
     run_required control-plane issue-packet-sync-self-test Static/Metadata/CI \
       python3 "$ROOT/tools/verify/sync_issue_packet.py" --self-test
+    run_required control-plane d0-seam-inventory-structure Static/Metadata/CI \
+      python3 "$ROOT/tools/verify/verify_d0_seams.py" --structure-only
     printf '%s\n' '{"schema":"chronforge.verification.profile-run/v1","profile":"control-plane","verdict":"PASS","evidence_class":"Static/Metadata/CI"}'
     ;;
   d0)
     run_required d0 d0-pin-receipt Metadata/Static \
       python3 "$ROOT/tools/verify/verify_d0_pin_receipt.py"
+    run_required d0 d0-seam-inventory Static/Metadata \
+      python3 "$ROOT/tools/verify/verify_d0_seams.py"
     run_required d0 d0-golden-receipt Runtime-subset/Metadata \
       python3 "$ROOT/tools/verify/verify_d0_golden_receipt.py"
     run_required d0 d0-baseline-receipt Metadata \
       python3 "$ROOT/tools/verify/verify_d0_receipt.py"
-    printf '%s\n' '{"schema":"chronforge.verification.profile-run/v1","profile":"d0","verdict":"PASS","evidence_class":"Runtime-subset/Metadata","limitations":["The stamped golden receipt references a successful exact-pin external-kernel run; this profile does not itself rerun that external checkout on every PR and does not accept D0.J."]}'
+    printf '%s\n' '{"schema":"chronforge.verification.profile-run/v1","profile":"d0","verdict":"PASS","evidence_class":"Runtime-subset/Metadata","limitations":["Pin/seam/golden receipts are child evidence only; this profile does not accept D0.J."]}'
     ;;
   d1|d2|d3|d4|d5|d6)
     python3 - "$ROOT/tools/verify/profiles.json" "$PROFILE" <<'PY'
